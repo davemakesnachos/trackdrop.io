@@ -16,6 +16,8 @@ $config['db_password'] = '';
 
 $config['web_token_cookie_name'] = 'tk';
 
+$config ['upload_folder'] = 'uploads';
+
 require_once('local_config.php');
 //require_once('private_config.php');
 
