@@ -12,6 +12,16 @@ class TrackModel extends Model
 {
 	protected $table = "tracks";
 
+	public function create($file, $hash)
+	{
+		$file['hash'] = $hash;
+
+        $track_data_cleaned = $this->permit($file, array('name',
+                                                         'size',
+                                                         'hash',));
+        return $this->insert($track_data_cleaned);
+	}
+
 	public function upload($file)
 	{
 		$tempFile = $file['tmp_name'];           
@@ -26,6 +36,8 @@ class TrackModel extends Model
 
 	    if (!$ret)
 			return $ret;
+
+	    return $this->create($file, $file_hash);
 	}
 
 	public function hash_file($file)
