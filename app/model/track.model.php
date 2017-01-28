@@ -22,7 +22,10 @@ class TrackModel extends Model
 
 	    $targetFile =  $targetPath . $file_hash;
 	 
-	    move_uploaded_file($tempFile, $targetFile);
+	    $ret = move_uploaded_file($tempFile, $targetFile);
+
+	    if (!$ret)
+			return $ret;
 	}
 
 	public function hash_file($file)
