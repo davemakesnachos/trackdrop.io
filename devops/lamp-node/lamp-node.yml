@@ -1,0 +1,125 @@
+---
+- hosts: all
+  sudo: yes
+
+  tasks:
+  - name: Enable UFW
+    ufw: direction=incoming policy=deny state=enabled
+
+  - name: UFW limit SSH
+    ufw: rule=limit port=ssh
+
+  - name: UFW open HTTP
+    ufw: rule=allow port=http
+
+  - name: install git
+    apt: name={{ item }} state=latest
+    with_items:
+      - git
+
+  - name: create /var/www/trackdrop directory
+    file: dest=/var/www/trackdrop state=directory owner=www-data group=www-data mode=0700
+
+  - name: create /var/www/.ssh/ directory
+    file: dest=/var/www/.ssh/ state=directory owner=www-data group=www-data mode=0700
+
+  - name: copy private ssh key
+    copy: src=deploy_key dest=/var/www/.ssh/id_rsa owner=www-data group=www-data mode=0600
+
+  - name: install nginx
+    apt: name={{ item }} state=latest
+    with_items:
+      - nginx
+
+  - name: install php7
+    apt: name={{ item }} state=latest
+    with_items:
+      - mcrypt
+      - php7.0-cli
+      - php7.0-curl
+      - php7.0-fpm
+      - php7.0-intl
+      - php7.0-json
+      - php7.0-mcrypt
+      - php7.0-mysqlnd
+
+  - name: install nodejs
+    apt: name={{ item }} state=latest
+    with_items:
+      - nodejs
+
+  - name: ensure php7.0-fpm cgi.fix_pathinfo=0
+    lineinfile: dest=/etc/php/7.0/fpm/php.ini regexp='^(.*)cgi.fix_pathinfo=' line=cgi.fix_pathinfo=0
+    notify:
+      - restart php7-fpm
+      - restart nginx
+
+  - name: enable php7 mcrypt module
+    shell: php7enmod mcrypt
+    args:
+      creates: /etc/php/7.0/cli/conf.d/20-mcrypt.ini
+
+  - name: download composer
+    get_url:
+      url: https://getcomposer.org/installer
+      dest: /tmp/installer
+    tags: composer
+
+  - name: install composer
+    shell: cat /tmp/installer | php -- --install-dir=/usr/local/bin
+    args:
+      creates: /usr/local/bin/composer
+    tags: composer
+
+  - name: rename composer.phar to composer
+    shell: mv /usr/local/bin/composer.phar /usr/local/bin/composer
+    args:
+      creates: /usr/local/bin/composer
+    tags: composer
+
+  - name: make composer executable
+    file:
+      path: /usr/local/bin/composer
+      mode: a+x
+      state: file
+    tags: composer
+
+  - name: Configure nginx
+    template: src=nginx.conf dest=/etc/nginx/sites-available/default
+    notify:
+      - restart php7-fpm
+      - restart nginx
+
+  - name: install mysql
+    apt: name={{ item }} state=latest
+    with_items:
+      - mysql-server
+      - python-mysqldb
+      - pwgen
+
+  - name: Create MySQL DB
+    mysql_db: name=trackdrop state=present
+
+  - name: Generate DB password
+    shell: pwgen 20 1
+    args:
+      creates: /var/www/trackdrop/dbpw
+    register: dbpwd
+
+  - name: Create MySQL User
+    mysql_user: name=trackdrop password={{ dbpwd.stdout }} priv=trackdrop.*:ALL state=present
+    when: dbpwd.changed
+
+  - name: Configure local app settings
+    template: src=local_config.php dest=/var/www/trackdrop
+
+  - name: Save dbpw file
+    lineinfile: dest=/var/www/trackdrop/dbpw line="{{ dbpwd.stdout }}" create=yes state=present
+    sudo: yes
+    when: dbpwd.changed
+
+  handlers:
+    - name: restart php7-fpm
+      service: name=php7.0-fpm state=restarted
+    - name: restart nginx
+      service: name=nginx state=restarted

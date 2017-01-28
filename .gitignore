@@ -1,0 +1,6 @@
+composer.phar
+/vendor
+config/local_config.php
+config/private_config.php
+config/.dbpw
+docs/html
