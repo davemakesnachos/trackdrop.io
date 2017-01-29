@@ -1,6 +1,14 @@
 <?php
 
+	require_once ("../core/bootstrap.php");
 
+	use App\Model\TrackModel;
+
+	$storeFolder = 'uploads';
+
+	$track = new TrackModel();
+
+	$tracks = $track->findAll();
 ?>
 
 <html>
@@ -41,6 +49,17 @@
 		<br />
 	  </div>
 	</form>
+
+	<br />
+
+<?php
+	foreach($tracks as $t) {
+		$template['track_name'] = $t->name;
+		$template['track_url'] = 'stream/' . $t->hash;
+		include '../view/snippets/track-box.php';
+	}
+?>
+
 	</div>
 </body>
 </html>
