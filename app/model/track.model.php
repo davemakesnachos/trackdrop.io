@@ -34,8 +34,10 @@ class TrackModel extends Model
 	 
 	    $ret = move_uploaded_file($tempFile, $targetFile);
 
-	    if (!$ret)
-			return $ret;
+	    if (!$ret) {
+			if (!file_exists($targetFile))
+				return $ret;
+	    }
 
 	    return $this->create($file, $file_hash);
 	}
