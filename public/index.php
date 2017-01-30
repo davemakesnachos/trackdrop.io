@@ -54,10 +54,14 @@
 	<br />
 
 <?php
-	foreach($tracks as $t) {
-		$template['track_name'] = $t->name;
-		$template['track_url'] = 'stream/' . $t->hash;
-		include '../view/snippets/track-box.php';
+	if (!empty($tracks)) {
+		foreach($tracks as $t) {
+			$template['track_name'] = $t->name;
+			$template['track_url'] = 'stream/' . $t->hash;
+			include '../view/snippets/track-box.php';
+		}
+	} else {
+		include '../view/snippets/empty-list.php';
 	}
 ?>
 
