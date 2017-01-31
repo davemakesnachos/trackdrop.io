@@ -81,11 +81,6 @@
 			$template['track_url'] = 'stream/' . $t->hash;
 			$template['track_id'] = $t->id;
 
-			if (($row_count++ % 2) == 1)
-				$template['track_row_type'] = 'row-even';
-			else
-				$template['track_row_type'] = 'row-odd';
-
 			include '../view/snippets/track-box.php';
 		}
 	} else {
