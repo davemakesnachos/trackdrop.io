@@ -27,6 +27,7 @@
 
 	<link href="https://fonts.googleapis.com/css?family=Oswald|Roboto" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<script src="js/main.js"></script>
 </head>
 
 <body>
@@ -58,6 +59,8 @@
 		foreach($tracks as $t) {
 			$template['track_name'] = $t->name;
 			$template['track_url'] = 'stream/' . $t->hash;
+			$template['track_id'] = $t->id;
+
 			include '../view/snippets/track-box.php';
 		}
 	} else {
