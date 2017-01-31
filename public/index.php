@@ -26,40 +26,65 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 	<link href="https://fonts.googleapis.com/css?family=Oswald|Roboto" rel="stylesheet">
+
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<script src="js/main.js"></script>
 </head>
 
 <body>
-	<nav class="navbar navbar-default">
-	  <div class="container">
-	  <div class="navbar-brand">
-	    trackdrop.io
-	  </div>
-	  </div>
-	</nav>
-	<div class = 'container'>
-	<form action="/upload.php" class="dropzone">
-	  <div class="fallback">
-		<br />
-		<br />
-		<br />
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.html">track<span class = "navbar-brand-accent">drop</span>.io</a>
+        </div>
+        <div class="navbar-collapse collapse navbar-right">
+          <ul class="nav navbar-nav">
+            <li><a href="index.php">home</a></li>
+   		  </ul>
+   		</div><!--/.nav-collapse -->
+      </div>
+    </div>
 
-	    <input name="file" type="file" multiple />
-		<br />
-		<br />
-		<br />
-	  </div>
-	</form>
+
+
+
+	<div class = 'container'>
+	    <div class = "dropzone-wrap">
+
+			<form action="/upload.php" class="dropzone">
+			  <div class="fallback">
+				<br />
+				<br />
+				<br />
+
+			    <input name="file" type="file" multiple />
+				<br />
+				<br />
+				<br />
+			  </div>
+			</form>
+		</div>
 
 	<br />
 
 <?php
 	if (!empty($tracks)) {
+		$row_count = 0;
 		foreach($tracks as $t) {
 			$template['track_name'] = $t->name;
 			$template['track_url'] = 'stream/' . $t->hash;
 			$template['track_id'] = $t->id;
+
+			if (($row_count++ % 2) == 1)
+				$template['track_row_type'] = 'row-even';
+			else
+				$template['track_row_type'] = 'row-odd';
 
 			include '../view/snippets/track-box.php';
 		}
