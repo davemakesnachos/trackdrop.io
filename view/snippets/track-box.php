@@ -1,10 +1,29 @@
 <div class="row <?php echo $template['track_row_type'] ?>" id="track<?php echo $template['track_id'] ?>">
-	<div class="col-sm-3"><?php echo $template['track_name'] ?></div>
-	<div class="col-sm-6"><audio src="<?php echo $template['track_url'] ?>" controls id="audio"></audio></div>
-	<div class="col-sm-1"> </div>
-	<div class="col-sm-2">
-		<nav class="cl-effect-15">
-			<a onClick = "deleteThis(track<?php echo $template['track_id'] ?>, <?php echo $template['track_id'] ?>)">Delete</a>
-		</nav>
+	<div class = "trackbox-header">
+		<div class="col-sm-4">
+			<?php echo $template['track_name'] ?>
+		</div>
+		<div class = "col-sm-6">
+			<button class="btn btn-primary btn-xs" onclick="playTrack('audio<?php echo $template['track_id'] ?>')">
+				<i class="fa fa-play"></i>
+				Play /
+				<i class="fa fa-pause"></i>
+				Pause
+			</button>
+		</div>
+		<div class="col-sm-2">
+		    <button class="btn btn-xs btn-danger pull-right" onclick="deleteThis(track<?php echo $template['track_id'] ?>, <?php echo $template['track_id'] ?>)">
+		      <i class="fa fa-trash"></i>
+		      Delete
+		    </button>
+		</div>
+	</div>
+	<div class = "trackbox-player-wrap">
+		<div class="col-sm-12"><div class="trackbox-player" id="audio<?php echo $template['track_id'] ?>"></div></div>
+		<script>
+			createPlayer('audio<?php echo $template['track_id'] ?>', 'http://192.168.33.10/<?php echo $template['track_url'] ?>');
+		</script>
 	</div>
 </div>
+
+<hr />
