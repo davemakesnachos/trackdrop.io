@@ -42,6 +42,14 @@ class TrackModel extends Model
 	    return $this->create($file, $file_hash);
 	}
 
+	public function get_download_url()
+	{
+		if (!isset($this->hash))
+			return NULL;
+
+		return get_config('upload_folder') . '/' . $this->hash;
+	}
+
 	public function hash_file($file)
 	{
 		$file = fopen($file['tmp_name'], 'rb');
