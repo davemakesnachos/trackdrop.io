@@ -10,6 +10,10 @@
 				<i class="fa fa-pause"></i>
 				Pause
 			</button>
+			<a class="btn btn-success btn-xs" href="calls.php?a=download&id=<?php echo $template['track_id'] ?>">
+				<i class="fa fa-download"></i>
+				Download
+			</a>
 		</div>
 		<div class="col-sm-2">
 		    <button class="btn btn-xs btn-danger pull-right" onclick="deleteThis(track<?php echo $template['track_id'] ?>, <?php echo $template['track_id'] ?>)">
