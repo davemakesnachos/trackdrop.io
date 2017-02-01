@@ -17,5 +17,16 @@
 				header("HTTP/1.0 404 Not Found");
 
 			break;
+
+		case 'download':
+			$id = $_GET['id'];
+			$t = $track->find($id);
+
+			header('Content-Type: application/octet-stream');
+			header("Content-Transfer-Encoding: Binary");
+			header("Content-disposition: attachment; filename=\"" . basename($t->name) . "\"");
+			readfile($t->get_download_url());
+
+			break;
 	}
 ?>     
