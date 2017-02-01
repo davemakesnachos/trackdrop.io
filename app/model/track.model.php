@@ -26,7 +26,7 @@ class TrackModel extends Model
 	{
 		$tempFile = $file['tmp_name'];           
 	      
-	    $targetPath = APP_ROOT . '/'. get_config('upload_folder') . '/';
+	    $targetPath = get_config('upload_folder') . '/';
 	     
 	    $file_hash = $this->hash_file($file);
 
