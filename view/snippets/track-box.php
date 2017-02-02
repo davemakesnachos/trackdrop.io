@@ -1,9 +1,9 @@
 <div class="row <?php echo $template['track_row_type'] ?>" id="track<?php echo $template['track_id'] ?>">
 	<div class = "trackbox-header">
-		<div class="col-sm-3">
+		<div class="col-sm-5">
 			<?php echo $template['track_name'] ?>
 		</div>
-		<div class = "col-sm-6">
+		<div class = "col-sm-4">
 			<button class="btn btn-primary btn-xs" onclick="playTrack('audio<?php echo $template['track_id'] ?>')">
 				<i class="fa fa-play"></i>
 				Play /
