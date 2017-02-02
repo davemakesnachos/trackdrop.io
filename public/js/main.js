@@ -1,5 +1,19 @@
 function deleteThis(div, id)
 {
+	$("#delete-div-" + id).fadeOut(.2, function() {
+		$("#delete-confirm-div-" + id).fadeIn();
+	});
+}
+
+function cancelDelete(id)
+{
+	$("#delete-confirm-div-" + id).fadeOut(.2, function() {
+		$("#delete-div-" + id).fadeIn();
+	});
+}
+
+function confirmDelete(div, id)
+{
 	var jqxhr = $.get( "calls.php?a=delete&id=" + id, function() {
 		$(div).fadeOut();
 	})

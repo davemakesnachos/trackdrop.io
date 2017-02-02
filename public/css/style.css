@@ -44,6 +44,12 @@
 	margin: 3px;
 }
 
+.delete-confirm {
+	display: none;
+	overflow:hidden;
+	text-align: right;
+}
+
 .row-even {
 	background-color:#cdcdcd;
 }
