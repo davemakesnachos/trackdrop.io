@@ -36,7 +36,7 @@
 	<div class = "trackbox-player-wrap">
 		<div class="col-sm-12"><div class="trackbox-player" id="audio<?php echo $template['track_id'] ?>"></div></div>
 		<script>
-			createPlayer('audio<?php echo $template['track_id'] ?>', 'http://192.168.33.10/<?php echo $template['track_url'] ?>');
+			createPlayer('audio<?php echo $template['track_id'] ?>', '<?php echo SITE_URL . '/' .$template['track_url'] ?>');
 		</script>
 	</div>
 </div>
