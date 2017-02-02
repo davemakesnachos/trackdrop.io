@@ -11,6 +11,8 @@
  * These will get populated by deployment script in local_config.php
  */
 
+define('SITE_URL', $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST']);
+
 $config['db_user'] = '';
 $config['db_password'] = '';
 
