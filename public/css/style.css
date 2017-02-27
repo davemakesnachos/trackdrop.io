@@ -126,14 +126,14 @@ a:focus {
 }
 
 .navbar {
-	min-height: 70px;
-	padding-top: 10px;
+	min-height: 60px;
+	padding-top: 5px;
 	margin-bottom: 0px;
 }
 
 .navbar-brand {
-	font-weight: 700;
-	font-size: 30px;
+	font-weight: 600;
+	font-size: 26px;
 	font-family: 'Oswald', sans-serif;
 }
 
