@@ -47,7 +47,12 @@
         </div>
         <div class="navbar-collapse collapse navbar-right">
           <ul class="nav navbar-nav">
-            <li><a href="index.php">home</a></li>
+            <li>
+				<a href="index.php">
+					Login
+					<i class="fa fa-user-circle-o"></i>
+				</a>
+            </li>
    		  </ul>
    		</div><!--/.nav-collapse -->
       </div>
