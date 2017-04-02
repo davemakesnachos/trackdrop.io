@@ -21,6 +21,8 @@ $config['web_token_cookie_name'] = 'tk';
 require_once('local_config.php');
 //require_once('private_config.php');
 
+$config['redirect_mode'] = false;
+
 $config ['upload_folder'] = APP_ROOT . '/uploads';
 
 function get_config($key)
