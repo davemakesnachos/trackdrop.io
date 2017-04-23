@@ -18,12 +18,14 @@
 	<br />
 
 <?php
+	$tracks = $meta_info['tracks'];
+
 	if (!empty($tracks)) {
 		$row_count = 0;
 		foreach($tracks as $t) {
-			$template['track_name'] = $t->name;
-			$template['track_url'] = 'stream/' . $t->hash;
-			$template['track_id'] = $t->id;
+			$sub_meta_info['track_name'] = $t->name;
+			$sub_meta_info['track_url'] = 'stream/' . $t->hash;
+			$sub_meta_info['track_id'] = $t->id;
 
 			include '../view/snippets/track-box.php';
 		}
