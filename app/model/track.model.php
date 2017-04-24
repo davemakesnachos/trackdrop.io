@@ -7,6 +7,7 @@
 namespace App\Model;
  
 use Core\Model;
+use App\Model\TrackWaveDataModel;
  
 class TrackModel extends Model
 {
@@ -24,6 +25,8 @@ class TrackModel extends Model
 
 	public function upload($file)
 	{
+		$trackWaveData = new TrackWaveDataModel;
+
 		$tempFile = $file['tmp_name'];           
 	      
 	    $targetPath = get_config('upload_folder') . '/';
@@ -31,6 +34,8 @@ class TrackModel extends Model
 	    $file_hash = $this->hash_file($file);
 
 	    $targetFile =  $targetPath . $file_hash;
+
+	    $twd = $trackWaveData->build_waveform($tempFile);
 	 
 	    $ret = move_uploaded_file($tempFile, $targetFile);
 
@@ -39,7 +44,11 @@ class TrackModel extends Model
 				return $ret;
 	    }
 
-	    return $this->create($file, $file_hash);
+	    $track_id = $this->create($file, $file_hash);
+
+	    $trackWaveData->create($track_id, $twd);
+
+	    return $track_id;
 	}
 
 	public function get_download_url()
