@@ -23,9 +23,15 @@
       - libsndfile1
       - libmad0
       - libid3tag0
-      - libboost-program-options1.58.0
-      - libboost-filesystem1.58.0
-      - libboost-regex1.58.0
+      - libboost-program-options1.61.0
+      - libboost-filesystem1.61.0
+      - libboost-regex1.61.0
+
+  - name: install audiowaveform binary
+    copy:
+      src: /home/dave/git-repos/audiowaveform/audiowaveform
+      dest: /usr/bin/audiowaveform
+      mode: 0755
 
   - name: create /var/www/trackdrop directory
     file: dest=/var/www/trackdrop state=directory owner=www-data group=www-data mode=0700
@@ -52,11 +58,36 @@
     with_items:
       - nodejs
 
+  - name: Configure nginx default site
+    template: src=nginx.conf dest=/etc/nginx/sites-available/default
+    notify:
+      - restart php7-fpm
+      - restart nginx
+
+  - name: Configure nginx
+    template: src=nginx.conf dest=/etc/nginx/nginx.conf
+    notify:
+      - restart php7-fpm
+      - restart nginx
+
   - name: ensure php7.0-fpm cgi.fix_pathinfo=0
     lineinfile: dest=/etc/php/7.0/fpm/php.ini regexp='^(.*)cgi.fix_pathinfo=' line=cgi.fix_pathinfo=0
     notify:
       - restart php7-fpm
       - restart nginx
+
+  - name: Set post_max_size
+    lineinfile: dest=/etc/php/7.0/fpm/php.ini
+                regexp='post_max_size(\s)?='
+                line='post_max_size = 128M'
+    notify: restart php7-fpm
+
+  - name: Set upload_max_filesize
+    lineinfile: dest=/etc/php/7.0/fpm/php.ini
+                regexp='upload_max_filesize(\s)?='
+                line='upload_max_filesize = 128M'
+                create=yes
+    notify: restart php7-fpm
 
   - name: enable php7 mcrypt module
     shell: php7enmod mcrypt
@@ -89,7 +120,7 @@
     tags: composer
 
   - name: Configure nginx
-    template: src=nginx.conf dest=/etc/nginx/sites-available/default
+    template: src=default dest=/etc/nginx/sites-available/default
     notify:
       - restart php7-fpm
       - restart nginx
@@ -107,7 +138,7 @@
   - name: Generate DB password
     shell: pwgen 20 1
     args:
-      creates: /var/www/trackdrop/dbpw
+      creates: /var/www/trackdrop/.dbpw
     register: dbpwd
 
   - name: Create MySQL User
@@ -121,6 +152,11 @@
     lineinfile: dest=/var/www/trackdrop/config/.dbpw line="{{ dbpwd.stdout }}" create=yes state=present
     sudo: yes
     when: dbpwd.changed
+
+  - name: run phinx migrations
+    shell: vendor/bin/phinx migrate
+    args:
+      chdir: /var/www/trackdrop
 
   handlers:
     - name: restart php7-fpm

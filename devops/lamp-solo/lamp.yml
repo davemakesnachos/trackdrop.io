@@ -35,13 +35,13 @@
       - nodejs
 
   - name: Configure nginx default site
-    template: src=../lamp-node/nginx.conf dest=/etc/nginx/sites-available/default
+    template: src=../lamp-node/default dest=/etc/nginx/sites-available/default
     notify:
       - restart php7-fpm
       - restart nginx
 
   - name: Configure nginx
-    template: src=nginx.conf dest=/etc/nginx/nginx.conf
+    template: src=../lamp-node/nginx.conf dest=/etc/nginx/nginx.conf
     notify:
       - restart php7-fpm
       - restart nginx
