@@ -34,6 +34,18 @@
     with_items:
       - nodejs
 
+  - name: Configure nginx default site
+    template: src=../lamp-node/nginx.conf dest=/etc/nginx/sites-available/default
+    notify:
+      - restart php7-fpm
+      - restart nginx
+
+  - name: Configure nginx
+    template: src=nginx.conf dest=/etc/nginx/nginx.conf
+    notify:
+      - restart php7-fpm
+      - restart nginx
+
   - name: fix sendfile issue in nginx.conf
     lineinfile: dest=/etc/nginx/nginx.conf regexp='sendfile on;' line=' sendfile off;' backrefs=yes
     sudo: yes
@@ -46,6 +58,19 @@
     notify:
       - restart php7-fpm
       - restart nginx
+
+  - name: Set post_max_size
+    lineinfile: dest=/etc/php/7.0/fpm/php.ini
+                regexp='post_max_size(\s)?='
+                line='post_max_size = 128M'
+    notify: restart php7-fpm
+
+  - name: Set upload_max_filesize
+    lineinfile: dest=/etc/php/7.0/fpm/php.ini
+                regexp='upload_max_filesize(\s)?='
+                line='upload_max_filesize = 128M'
+                create=yes
+    notify: restart php7-fpm
 
   - name: enable php7 mcrypt module
     shell: php7enmod mcrypt
@@ -104,12 +129,6 @@
       mode: a+x
       state: file
     tags: composer
-
-  - name: Configure nginx
-    template: src=../lamp-node/nginx.conf dest=/etc/nginx/sites-available/default
-    notify:
-      - restart php7-fpm
-      - restart nginx
 
   - name: install mysql
     apt: name={{ item }} state=latest
