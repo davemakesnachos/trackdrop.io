@@ -16,7 +16,7 @@ class HomeController extends Controller
 
         $track = new TrackModel();
 
-        $tracks = $track->findAll();
+        $tracks = $track->findAll(500, "created DESC");
 
         foreach($tracks as $t) {
             $d = TrackWaveDataModel::findBy(array("track_id" => $t->id));
