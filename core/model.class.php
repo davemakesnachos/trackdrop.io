@@ -135,15 +135,22 @@ class Model
     /**
      * @brief Find all records
      * @param integer $limit max number of rows to return
+     * @param string $order_by SQL order_by clasue, eg "id DESC"
      * @retval class Either returns NULL if no match found or a new Model matching
      *               the caller type with ccolumns as class vars.
      *
      */
-    static public function findAll($limit = 500)
+    static public function findAll($limit = 500, $order_by = "")
     {
         $model = self::createModel();
 
-        $model->db->prepare('SELECT * FROM ' . $model->table . " LIMIT " . $limit);
+        if ($order_by != '') 
+            $order_by_string = " ORDER BY " . $order_by;
+        else
+            $order_by_string = '';
+        
+        echo 'SELECT * FROM ' . $model->table . $order_by_string . " LIMIT " . $limit;
+        $model->db->prepare('SELECT * FROM ' . $model->table . $order_by_string . " LIMIT " . $limit);
         $model->db->execute([]);
         $results = $model->db->fetchAll();
 
