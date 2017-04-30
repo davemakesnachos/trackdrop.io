@@ -36,7 +36,8 @@
 	<div class = "trackbox-player-wrap">
 		<div class="col-sm-12"><div class="trackbox-player" id="audio<?php echo $sub_meta_info['track_id'] ?>"></div></div>
 		<script>
-			createPlayer('audio<?php echo $sub_meta_info['track_id'] ?>', '<?php echo SITE_URL . '/' .$sub_meta_info['track_url'] ?>');
+			var trackData = <?php if (isset($sub_meta_info['track_data'])) echo $sub_meta_info['track_data']; ?>
+			createPlayer('audio<?php echo $sub_meta_info['track_id'] ?>', '<?php echo SITE_URL . '/' .$sub_meta_info['track_url'] ?>', trackData);
 		</script>
 	</div>
 </div>

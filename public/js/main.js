@@ -24,24 +24,44 @@ function confirmDelete(div, id)
 
 var playerList = [];
 
-function createPlayer(id, audio)
+function createPlayer(id, audio, data)
 {
 	var wavesurfer = WaveSurfer.create({
 	    container: '#' + id,
 	    waveColor: 'violet',
 	    progressColor: 'purple',
 	    barWidth: 1,
-	    hideScrollbar: true
+	    hideScrollbar: true,
+	    preload: "metadata",
+		backend: 'MediaElement',
+		mediaType:'audio'
 	});
 
 	var playerInfo = {
 		wavesurferObj: wavesurfer,
-		status: 'pause'
+		status: 'pause',
 	}
 
 	playerList[id] = playerInfo;
 
-	wavesurfer.load(audio);
+	wavesurfer.song = audio;
+	wavesurfer.backend.peaks = data.data;
+	wavesurfer.drawBuffer();
+
+	wavesurfer.loaded = false;
+
+	wavesurfer.on("play", function () {
+	    if(!wavesurfer.loaded) {
+	        wavesurfer.load(wavesurfer.song, wavesurfer.backend.peaks);
+	    }
+	});
+
+	wavesurfer.on("ready", function () {
+	    if(!wavesurfer.loaded) {
+	        wavesurfer.loaded = true;
+	        wavesurfer.play();
+	    }
+	});
 }
 
 function playTrack(id)

@@ -26,6 +26,8 @@
 			$sub_meta_info['track_name'] = $t->name;
 			$sub_meta_info['track_url'] = 'stream/' . $t->hash;
 			$sub_meta_info['track_id'] = $t->id;
+			if (isset($t->wave_data))
+				$sub_meta_info['track_data'] = $t->wave_data;
 
 			include '../view/snippets/track-box.php';
 		}
