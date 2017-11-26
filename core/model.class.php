@@ -148,8 +148,7 @@ class Model
             $order_by_string = " ORDER BY " . $order_by;
         else
             $order_by_string = '';
-        
-        echo 'SELECT * FROM ' . $model->table . $order_by_string . " LIMIT " . $limit;
+
         $model->db->prepare('SELECT * FROM ' . $model->table . $order_by_string . " LIMIT " . $limit);
         $model->db->execute([]);
         $results = $model->db->fetchAll();
