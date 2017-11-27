@@ -33,6 +33,9 @@
   - name: create /var/www/trackdrop-dev/config directory
     file: dest=/var/www/trackdrop-dev/config state=directory owner=www-data group=www-data mode=0700
 
+  - name: create /var/www/trackdrop-dev/uploads directory
+    file: dest=/var/www/trackdrop-dev/uploads state=directory owner=www-data group=www-data mode=0775
+
   - name: install nginx
     apt: name={{ item }} state=latest
     with_items:
