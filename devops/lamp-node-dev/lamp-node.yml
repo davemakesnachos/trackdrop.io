@@ -30,6 +30,9 @@
   - name: create /var/www/trackdrop-dev directory
     file: dest=/var/www/trackdrop-dev state=directory owner=www-data group=www-data mode=0700
 
+  - name: create /var/www/trackdrop-dev/config directory
+    file: dest=/var/www/trackdrop-dev/config state=directory owner=www-data group=www-data mode=0700
+
   - name: install nginx
     apt: name={{ item }} state=latest
     with_items:
@@ -107,7 +110,7 @@
   - name: Generate DB password
     shell: pwgen 20 1
     args:
-      creates: /var/www/trackdrop-dev/dbpw
+      creates: /var/www/trackdrop-dev/.dbpw
     register: dbpwd
 
   - name: Create MySQL User
@@ -115,7 +118,7 @@
     when: dbpwd.changed
 
   - name: Configure local app settings
-    template: src=local_config.php dest=/var/www/trackdrop-dev/config
+    template: src=local_config.php dest=/var/www/trackdrop-dev/config/
 
   - name: Save dbpw file
     lineinfile: dest=/var/www/trackdrop-dev/config/.dbpw line="{{ dbpwd.stdout }}" create=yes state=present
