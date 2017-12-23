@@ -4,3 +4,6 @@ config/local_config.php
 config/private_config.php
 config/.dbpw
 docs/html
+uploads/
+*.retry
+.vagrant
