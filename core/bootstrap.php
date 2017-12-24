@@ -14,3 +14,5 @@ $api_route_files = array_diff($api_route_files, array('.', '..'));
 foreach($api_route_files as $file){
     require_once(APP_ROOT . '/config/routes/api/' . $file);
 }
+
+require_once(APP_ROOT . '/lib/json_helpers.php');
