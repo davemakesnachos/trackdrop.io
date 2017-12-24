@@ -19,7 +19,6 @@ class TrackBox extends Component {
     this.setState({
       playing: !this.state.playing
     });
-    console.log("playing");
   }
 
   handlePosChange(e) {
@@ -33,7 +32,7 @@ class TrackBox extends Component {
         <div className="row" id="track<?php echo $sub_meta_info['track_id'] ?>">
         <div className = "trackbox-header">
             <div className="col-sm-5">
-                Track Name
+                {this.props.track.name}
             </div>
             <div className = "col-sm-4">
                 <button className="btn btn-primary btn-xs" onClick={this.handleTogglePlay}>
@@ -69,7 +68,7 @@ class TrackBox extends Component {
             <div className="col-sm-12">
                 <div className="trackbox-player">
                     <ReactWavesurfer className=""
-                    audioFile={'http://trackdrop.io/stream/b3a5b221ad611bb73a0cd9fafea96e43f27cab280100744a907fd4c40e91c404.mp3'}
+                    audioFile={this.props.track.streamUrl}
                     pos={this.state.pos}
                     onPosChange={this.handlePosChange}
                     playing={this.state.playing}

@@ -5,17 +5,38 @@ import { Navbar, Nav, NavItem, MenuItem, NavDropdown } from 'react-bootstrap';
 import ReactWavesurfer from 'react-wavesurfer';
 import TrackBox from './components/trackbox.js';
 
+class TrackList extends Component {
+  render() {
+    let trackList = this.props.tracks;
+    const trackListRendered = Object.keys(trackList).map(function(key) {
+      console.log(trackList[key]);
+      return <TrackBox track={trackList[key]} />;
+    });
+
+    return (<span> {trackListRendered} </span>);
+  }
+}
+
 class App extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       playing: false,
-      pos: 0
+      pos: 0,
+      tracks: {}
     };
     this.handleTogglePlay = this.handleTogglePlay.bind(this);
     this.handlePosChange = this.handlePosChange.bind(this);
   }
+
+  componentDidMount() {
+    return fetch('http://192.168.33.10/api/v1/tracks', {
+      accept: 'application/json',
+    }).then((response) => { return response.json(); })
+      .then((json) => { this.setState({tracks: json.tracks}) });
+  }
+
   handleTogglePlay() {
     this.setState({
       playing: !this.state.playing
@@ -26,6 +47,7 @@ class App extends Component {
       pos: e.originalArgs[0]
     });
   }
+
   render() {
     return (
       <div className="App">
@@ -41,7 +63,7 @@ class App extends Component {
         </header>
         <div className="container">
           <p className="App-intro">
-            <TrackBox />
+            <TrackList tracks={this.state.tracks} />
           </p>
       </div>
       </div>
