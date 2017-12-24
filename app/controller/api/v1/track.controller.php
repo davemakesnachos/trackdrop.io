@@ -18,10 +18,12 @@ class TrackController extends Controller
             $d = TrackWaveDataModel::findBy(array("track_id" => $t->id));
             if (isset($d))
                 $t->wave_data = $d->data;
+            $t->streamUrl = SITE_URL . "/stream/" . $t->hash . ".mp3";
             $track_list[] = $t;
         }
 
-        $response = json_response_success($track_list);
+        $response['tracks'] = $track_list;
+        $response = json_response_success($response);
         $this->data('response', $response);
     }
 
