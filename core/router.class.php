@@ -66,11 +66,9 @@ class Router
 
                 // api route
                 if (in_array($route, self::$api_routes)) {
-                    preg_match('/^\/api\/(([0-9]+).[0-9]+)/', $route['url'], $version_match);
-                    $major_version = $version_match[2];
-                    $minor_version = str_replace('.', '_', $version_match[1]);
-                    //$minor_version = $version_match[1];
-                    $class = 'App\Controller\Api\\v'.$major_version.'\\v'.$minor_version.'\\'.$route['controller'];
+                    preg_match('/v([0-9]+)/', $route['url'], $version_match);
+                    $major_version = $version_match[1];
+                    $class = 'App\Controller\Api\\v'.$major_version.'\\'.$route['controller'];
                 }
 
                 foreach($params as &$param) {
