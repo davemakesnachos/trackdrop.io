@@ -97,6 +97,7 @@ class Controller
 
     private function renderJson()
     {
+        header('Content-type:application/json');
         echo json_encode($this->data['response']);
     }
 
