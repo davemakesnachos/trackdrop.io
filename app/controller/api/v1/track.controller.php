@@ -28,4 +28,15 @@ class TrackController extends Controller
         $this->data('response', $response);
     }
 
+    public function delete()
+    {
+        $track = new TrackModel();
+
+        $id = $this->params['id'];
+
+        $track->delete("id = \"" . $id. "\"");
+
+        $response = json_response_success();
+        $this->data('response', $response);
+    }
 }

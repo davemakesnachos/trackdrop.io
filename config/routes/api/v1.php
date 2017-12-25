@@ -7,3 +7,9 @@ Router::addApi([
     'controller' => 'TrackController',
     'method' => 'allTracks',
 ]);
+
+Router::addApi([
+    'url' => '/api/v1/track/delete/{id}',
+    'controller' => 'TrackController',
+    'method' => 'delete',
+]);
