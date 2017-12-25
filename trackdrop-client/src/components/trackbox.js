@@ -41,7 +41,7 @@ class TrackBox extends Component {
                     <i className="fa fa-pause"></i>
                     Pause
                 </button>
-                <a className="btn btn-success btn-xs" href="calls.php?a=download&id=<?php echo $sub_meta_info['track_id'] ?>">
+                <a className="btn btn-success btn-xs" href={this.props.track.downloadUrl}>
                     <i className="fa fa-download"></i>
                     Download
                 </a>
