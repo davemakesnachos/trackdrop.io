@@ -19,6 +19,7 @@ class TrackController extends Controller
             if (isset($d))
                 $t->wave_data = $d->data;
             $t->streamUrl = SITE_URL . "/stream/" . $t->hash . ".mp3";
+            $t->downloadUrl = SITE_URL . "/track/download/" . $t->id;
             $track_list[] = $t;
         }
 
