@@ -2,6 +2,20 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { Navbar, Nav, NavItem, MenuItem, NavDropdown } from 'react-bootstrap';
+import {
+  Button,
+  Container,
+  Divider,
+  Grid,
+  Header,
+  Icon,
+  Image,
+  List,
+  Menu,
+  Segment,
+  Visibility,
+  Dropdown,
+} from 'semantic-ui-react'
 import ReactWavesurfer from 'react-wavesurfer';
 import TrackBox from './components/trackbox.js';
 
@@ -34,7 +48,7 @@ class App extends Component {
     return fetch('http://192.168.33.10/api/v1/tracks', {
       accept: 'application/json',
     }).then((response) => { return response.json(); })
-      .then((json) => { this.setState({tracks: json.tracks}) });
+      .then((json) => { console.log(json); this.setState({tracks: json.tracks}) });
   }
 
   handleTogglePlay() {
@@ -50,23 +64,78 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
+      <div>
+    <Menu fixed='top' inverted size='large'>
+      <Container>
+        <Menu.Item as='a' header>
+          trackdrop.io
+        </Menu.Item>
+        <Menu.Item position='right'>
+        <Button as='a' inverted>Log in</Button>
+        <Button as='a' inverted style={{ marginLeft: '0.5em' }}>Sign Up</Button>
+        </Menu.Item>
+      </Container>
+    </Menu>
+    <Container style={{ marginTop: '7em' }}>
+      <TrackList tracks={this.state.tracks} />
+    </Container>
+    <Segment
+      inverted
+      vertical
+      style={{ margin: '5em 0em 0em', padding: '5em 0em' }}
+    >
+      <Container textAlign='center'>
+        <Grid divided inverted stackable>
+          <Grid.Row>
+            <Grid.Column width={3}>
+              <Header inverted as='h4' content='Group 1' />
+              <List link inverted>
+                <List.Item as='a'>Link One</List.Item>
+                <List.Item as='a'>Link Two</List.Item>
+                <List.Item as='a'>Link Three</List.Item>
+                <List.Item as='a'>Link Four</List.Item>
+              </List>
+            </Grid.Column>
+            <Grid.Column width={3}>
+              <Header inverted as='h4' content='Group 2' />
+              <List link inverted>
+                <List.Item as='a'>Link One</List.Item>
+                <List.Item as='a'>Link Two</List.Item>
+                <List.Item as='a'>Link Three</List.Item>
+                <List.Item as='a'>Link Four</List.Item>
+              </List>
+            </Grid.Column>
+            <Grid.Column width={3}>
+              <Header inverted as='h4' content='Group 3' />
+              <List link inverted>
+                <List.Item as='a'>Link One</List.Item>
+                <List.Item as='a'>Link Two</List.Item>
+                <List.Item as='a'>Link Three</List.Item>
+                <List.Item as='a'>Link Four</List.Item>
+              </List>
+            </Grid.Column>
+            <Grid.Column width={3}>
+              <Header inverted as='h4' content='Footer Header' />
+              <p>Extra space for a call to action inside the footer that could help re-engage users.</p>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
 
-        <header className="App-header">
-          <Navbar navbar navbar-default navbar-fixed-top>
-          <Navbar.Header className="navbar-header">
-            <Navbar.Brand>
-              <a class="navbar-brand" href="/">track<span class = "navbar-brand-accent">drop</span>.io</a>
-            </Navbar.Brand>
-          </Navbar.Header>
-        </Navbar>
-        </header>
-        <div className="container">
-          <p className="App-intro">
-            <TrackList tracks={this.state.tracks} />
-          </p>
-      </div>
-      </div>
+        <Divider inverted section />
+        <Image
+          centered
+          size='mini'
+          src='/logo.png'
+        />
+        <List horizontal inverted divided link>
+          <List.Item as='a' href='#'>Site Map</List.Item>
+          <List.Item as='a' href='#'>Contact Us</List.Item>
+          <List.Item as='a' href='#'>Terms and Conditions</List.Item>
+          <List.Item as='a' href='#'>Privacy Policy</List.Item>
+        </List>
+      </Container>
+    </Segment>
+  </div>
     );
   }
 }

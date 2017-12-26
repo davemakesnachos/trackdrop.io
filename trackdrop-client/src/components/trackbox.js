@@ -1,7 +1,16 @@
 import React, { Component } from 'react';
 import '../App.css';
-import { Image, Panel, Button, Grid, Row, Col } from 'react-bootstrap';
-import { DeleteModal } from './trackbox_delete_modal.js';
+import { Panel, Row, Col } from 'react-bootstrap';
+import {
+    Card,
+    Divider,
+    Feed,
+    Image,
+    Icon,
+    Grid,
+    Button,
+  } from 'semantic-ui-react'
+import { DeleteButton } from './trackbox_delete_modal.js';
 import ReactWavesurfer from 'react-wavesurfer';
 
 class TrackBox extends Component {
@@ -36,6 +45,35 @@ class TrackBox extends Component {
   }
   render() {
     let hideDelete = () => this.setState({ deleteShow: false });
+
+    const tmp = (
+        <div className="row" id="track<?php echo $sub_meta_info['track_id'] ?>">
+        <Panel>
+        <div className = "trackbox-player-wrap">
+            <div className="col-sm-12">
+                <div className="trackbox-player">
+                    <ReactWavesurfer className=""
+                    audioFile={this.props.track.streamUrl}
+                    pos={this.state.pos}
+                    onPosChange={this.handlePosChange}
+                    playing={this.state.playing}
+                    options={{
+                        waveColor: 'violet',
+                        progressColor: 'purple',
+                        barWidth: 3,
+                        hideScrollbar: true,
+                        preload: "metadata",
+                        backend: 'MediaElement',
+                        mediaType:'audio'
+                    }}
+                    />
+                </div>
+            </div>
+        </div>
+        </Panel>
+      </div>
+    )
+
     const panelHeaderACtual = (
         <div className = "row trackbox-header">
             <div className="col-sm-5">
@@ -64,46 +102,48 @@ class TrackBox extends Component {
         </div>
     );
 
-    const panelHeader = (
-            <Grid className= "track-header">
-            <Row className= "track-header">
-            <Col xs={1} md={1} className= "track-header">
-                <Image src="profile-blank.png" circle responsive />
-            </Col>
-            <Col xs={11} md={11} track-header>
-                {this.props.track.name}
-            </Col>
-            </Row>
-        </Grid>
-    );
-
     return (
-        <div className="row" id="track<?php echo $sub_meta_info['track_id'] ?>">
-        <DeleteModal show={this.state.deleteShow} track={this.props.track} onHide={hideDelete} confirmdelete={this.confirmDelete}/>
-        <Panel header={panelHeader}>
-        <div className = "trackbox-player-wrap">
-            <div className="col-sm-12">
-                <div className="trackbox-player">
-                    <ReactWavesurfer className=""
-                    audioFile={this.props.track.streamUrl}
-                    pos={this.state.pos}
-                    onPosChange={this.handlePosChange}
-                    playing={this.state.playing}
-                    options={{
-                        waveColor: 'violet',
-                        progressColor: 'purple',
-                        barWidth: 3,
-                        hideScrollbar: true,
-                        preload: "metadata",
-                        backend: 'MediaElement',
-                        mediaType:'audio'
-                    }}
-                    />
-                </div>
-            </div>
-        </div>
-        </Panel>
-      </div>
+        <Card fluid>
+        <Card.Content>
+          <Card.Header>
+                <Image src="profile-blank.png" size='mini' circular spaced='right'/>
+                {this.props.track.name}
+          </Card.Header>
+        </Card.Content>
+        <Card.Content>
+        <Grid >
+          <Grid.Row>
+            <Grid.Column width={2} verticalAlign='middle'>
+            {
+                this.state.playing
+                ? <Icon link name='pause' size='huge' onClick={this.handleTogglePlay}/>
+                : <Icon link name='play' size='huge' onClick={this.handleTogglePlay}/>
+            }
+            </Grid.Column>
+            <Grid.Column width={14}>
+            <ReactWavesurfer className=""
+                        audioFile={this.props.track.streamUrl}
+                        pos={this.state.pos}
+                        onPosChange={this.handlePosChange}
+                        playing={this.state.playing}
+                        options={{
+                            waveColor: 'violet',
+                            progressColor: 'purple',
+                            barWidth: 3,
+                            hideScrollbar: true,
+                            preload: "metadata",
+                            backend: 'MediaElement',
+                            mediaType:'audio',
+                            cursorWidth: 0
+                        }}
+                        />
+            </Grid.Column>
+            </Grid.Row>
+            </Grid>
+            <DeleteButton show={this.state.deleteShow} track={this.props.track} onHide={hideDelete} confirmdelete={this.confirmDelete}/>
+            <Button color='green' size="mini" href={this.props.track.downloadUrl} floated='right'>Download</Button>
+        </Card.Content>
+      </Card>
     );
   }
 }
