@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import '../App.css';
-import { Navbar, Nav, NavItem, MenuItem, NavDropdown } from 'react-bootstrap';
+import { Image, Panel, Button, Grid, Row, Col } from 'react-bootstrap';
+import { DeleteModal } from './trackbox_delete_modal.js';
 import ReactWavesurfer from 'react-wavesurfer';
 
 class TrackBox extends Component {
@@ -13,6 +14,7 @@ class TrackBox extends Component {
     };
     this.handleTogglePlay = this.handleTogglePlay.bind(this);
     this.handlePosChange = this.handlePosChange.bind(this);
+    this.confirmDelete = this.confirmDelete.bind(this);
   }
 
   handleTogglePlay() {
@@ -27,10 +29,15 @@ class TrackBox extends Component {
     });
   }
 
+  confirmDelete() {
+    fetch('http://192.168.33.10/api/v1/track/delete/' + this.props.track.id, {
+        accept: 'application/json',
+      });
+  }
   render() {
-    return (
-        <div className="row" id="track<?php echo $sub_meta_info['track_id'] ?>">
-        <div className = "trackbox-header">
+    let hideDelete = () => this.setState({ deleteShow: false });
+    const panelHeaderACtual = (
+        <div className = "row trackbox-header">
             <div className="col-sm-5">
                 {this.props.track.name}
             </div>
@@ -48,22 +55,32 @@ class TrackBox extends Component {
             </div>
             <div className="col-sm-3">
                 <div className="delete-button" id = "delete-div-<?php echo $sub_meta_info['track_id'] ?>">
-                    <button className="btn btn-xs btn-danger pull-right" onclick="deleteThis(track<?php echo $sub_meta_info['track_id'] ?>, <?php echo $sub_meta_info['track_id'] ?>)">
+                    <button className="btn btn-xs btn-danger pull-right" onClick={() => this.setState({ deleteShow: true })}>
                     <i className="fa fa-trash"></i>
                     Delete
                     </button>
                 </div>
-                <div className="delete-confirm pull-right" id = "delete-confirm-div-<?php echo $sub_meta_info['track_id'] ?>">
-                    Are you sure?
-                    <button className="btn btn-xs btn-success" onclick="confirmDelete(track<?php echo $sub_meta_info['track_id'] ?>, <?php echo $sub_meta_info['track_id'] ?>)">
-                    Yes
-                    </button>
-                    <button className="btn btn-xs btn-danger" onclick="cancelDelete(<?php echo $sub_meta_info['track_id'] ?>)">
-                    No
-                    </button>
-                </div>
             </div>
         </div>
+    );
+
+    const panelHeader = (
+            <Grid className= "track-header">
+            <Row className= "track-header">
+            <Col xs={1} md={1} className= "track-header">
+                <Image src="profile-blank.png" circle responsive />
+            </Col>
+            <Col xs={11} md={11} track-header>
+                {this.props.track.name}
+            </Col>
+            </Row>
+        </Grid>
+    );
+
+    return (
+        <div className="row" id="track<?php echo $sub_meta_info['track_id'] ?>">
+        <DeleteModal show={this.state.deleteShow} track={this.props.track} onHide={hideDelete} confirmdelete={this.confirmDelete}/>
+        <Panel header={panelHeader}>
         <div className = "trackbox-player-wrap">
             <div className="col-sm-12">
                 <div className="trackbox-player">
@@ -75,7 +92,7 @@ class TrackBox extends Component {
                     options={{
                         waveColor: 'violet',
                         progressColor: 'purple',
-                        barWidth: 1,
+                        barWidth: 3,
                         hideScrollbar: true,
                         preload: "metadata",
                         backend: 'MediaElement',
@@ -85,6 +102,7 @@ class TrackBox extends Component {
                 </div>
             </div>
         </div>
+        </Panel>
       </div>
     );
   }
