@@ -113,14 +113,14 @@ class TrackBox extends Component {
         <Card.Content>
         <Grid >
           <Grid.Row>
-            <Grid.Column width={2} verticalAlign='middle'>
+            <Grid.Column width={1} verticalAlign='middle' textAlign='center'>
             {
                 this.state.playing
                 ? <Icon link name='pause' size='huge' onClick={this.handleTogglePlay}/>
                 : <Icon link name='play' size='huge' onClick={this.handleTogglePlay}/>
             }
             </Grid.Column>
-            <Grid.Column width={14}>
+            <Grid.Column width={15}>
             <ReactWavesurfer className=""
                         audioFile={this.props.track.streamUrl}
                         pos={this.state.pos}
