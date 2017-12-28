@@ -38,12 +38,8 @@ class App extends Component {
     super(props);
 
     this.state = {
-      playing: false,
-      pos: 0,
       tracks: {}
     };
-    this.handleTogglePlay = this.handleTogglePlay.bind(this);
-    this.handlePosChange = this.handlePosChange.bind(this);
   }
 
   componentDidMount() {
@@ -51,17 +47,6 @@ class App extends Component {
       accept: 'application/json',
     }).then((response) => { return response.json(); })
       .then((json) => { console.log(json); this.setState({tracks: json.tracks}) });
-  }
-
-  handleTogglePlay() {
-    this.setState({
-      playing: !this.state.playing
-    });
-  }
-  handlePosChange(e) {
-    this.setState({
-      pos: e.originalArgs[0]
-    });
   }
 
   render() {
