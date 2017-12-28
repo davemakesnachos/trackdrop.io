@@ -14,13 +14,17 @@ class TrackController extends Controller
 
         $tracks = $track->findAll(500, "created DESC");
 
-        foreach($tracks as $t) {
-            $d = TrackWaveDataModel::findBy(array("track_id" => $t->id));
-            if (isset($d))
-                $t->wave_data = $d->data;
-            $t->streamUrl = SITE_URL . "/stream/" . $t->hash . ".mp3";
-            $t->downloadUrl = SITE_URL . "/track/download/" . $t->id;
-            $track_list[] = $t;
+        if (empty($tracks)) {
+            $track_list = array();
+        } else {
+            foreach($tracks as $t) {
+                $d = TrackWaveDataModel::findBy(array("track_id" => $t->id));
+                if (isset($d))
+                    $t->wave_data = $d->data;
+                $t->streamUrl = SITE_URL . "/stream/" . $t->hash . ".mp3";
+                $t->downloadUrl = SITE_URL . "/track/download/" . $t->id;
+                $track_list[] = $t;
+            }
         }
 
         $response['tracks'] = $track_list;
