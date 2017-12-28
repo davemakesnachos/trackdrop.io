@@ -24,9 +24,10 @@ import { TrackUploadBox } from './components/track_upload_box.js'
 class TrackList extends Component {
   render() {
     let trackList = this.props.tracks;
+    let removetrack = this.props.removetrack;
     const trackListRendered = Object.keys(trackList).map(function(key) {
       console.log(trackList[key]);
-      return <TrackBox track={trackList[key]} />;
+      return <TrackBox track={trackList[key]} removetrack={removetrack} />;
     });
 
     return (<span> {trackListRendered} </span>);
@@ -40,6 +41,8 @@ class App extends Component {
     this.state = {
       tracks: {}
     };
+
+    this.removeTrack = this.removeTrack.bind(this);
   }
 
   componentDidMount() {
@@ -47,6 +50,12 @@ class App extends Component {
       accept: 'application/json',
     }).then((response) => { return response.json(); })
       .then((json) => { console.log(json); this.setState({tracks: json.tracks}) });
+  }
+
+  removeTrack(id) {
+    this.setState(prevState => ({
+      tracks: prevState.tracks.filter(el => el.id != id )
+    }));
   }
 
   render() {
@@ -65,7 +74,7 @@ class App extends Component {
     </Menu>
     <Container style={{ marginTop: '7em' }}>
       <TrackUploadBox />
-      <TrackList tracks={this.state.tracks} />
+      <TrackList tracks={this.state.tracks} removetrack={this.removeTrack}/>
     </Container>
     <Segment
       inverted

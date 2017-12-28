@@ -39,9 +39,12 @@ class TrackBox extends Component {
   }
 
   confirmDelete() {
+    let removeTrack = this.props.removetrack;
     fetch('http://192.168.33.10/api/v1/track/delete/' + this.props.track.id, {
         accept: 'application/json',
-      });
+      }).then(() => {
+        removeTrack(this.props.track.id);
+    })
   }
   render() {
     let hideDelete = () => this.setState({ deleteShow: false });
