@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { Navbar, Nav, NavItem, MenuItem, NavDropdown } from 'react-bootstrap';
+import './node_modules/dropzone/dist/min/dropzone.min.css';
+import './node_modules/react-dropzone-component/styles/filepicker.css';
 import {
   Button,
   Container,
@@ -18,6 +19,7 @@ import {
 } from 'semantic-ui-react'
 import ReactWavesurfer from 'react-wavesurfer';
 import TrackBox from './components/trackbox.js';
+import { TrackUploadBox } from './components/track_upload_box.js'
 
 class TrackList extends Component {
   render() {
@@ -77,6 +79,7 @@ class App extends Component {
       </Container>
     </Menu>
     <Container style={{ marginTop: '7em' }}>
+      <TrackUploadBox />
       <TrackList tracks={this.state.tracks} />
     </Container>
     <Segment
