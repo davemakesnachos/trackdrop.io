@@ -18,7 +18,9 @@ class TrackBox extends Component {
 
     this.state = {
       playing: false,
-      pos: 0
+      pos: 0,
+      loaded: false,
+      audioFile: ''
     };
     this.handleTogglePlay = this.handleTogglePlay.bind(this);
     this.handlePosChange = this.handlePosChange.bind(this);
@@ -26,8 +28,14 @@ class TrackBox extends Component {
   }
 
   handleTogglePlay() {
+    if (!this.state.loaded) {
+        this.setState({
+            audioFile: this.props.track.streamUrl,
+            loaded: true
+        })
+    }
     this.setState({
-      playing: !this.state.playing
+      playing: !this.state.playing,
     });
   }
 
@@ -65,18 +73,19 @@ class TrackBox extends Component {
             }
             </Grid.Column>
             <Grid.Column width={14}>
-            <ReactWavesurfer className=""
-                        audioFile={this.props.track.streamUrl}
+            <ReactWavesurfer
+                        audioFile={this.state.audioFile}
                         pos={this.state.pos}
                         onPosChange={this.handlePosChange}
                         playing={this.state.playing}
+                        audioPeaks={this.props.track.wave_data.data}
+                        prerender
                         options={{
                             waveColor: 'violet',
                             progressColor: 'purple',
                             barWidth: 2,
                             height: 100,
                             hideScrollbar: true,
-                            preload: "metadata",
                             backend: 'MediaElement',
                             mediaType:'audio',
                             cursorWidth: 0
