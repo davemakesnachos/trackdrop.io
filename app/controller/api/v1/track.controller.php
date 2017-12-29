@@ -20,7 +20,7 @@ class TrackController extends Controller
             foreach($tracks as $t) {
                 $d = TrackWaveDataModel::findBy(array("track_id" => $t->id));
                 if (isset($d))
-                    $t->wave_data = $d->data;
+                    $t->wave_data = json_decode($d->data);
                 $t->streamUrl = SITE_URL . "/stream/" . $t->hash . ".mp3";
                 $t->downloadUrl = SITE_URL . "/track/download/" . $t->id;
                 $track_list[] = $t;
