@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import './node_modules/dropzone/dist/min/dropzone.min.css';
 import './node_modules/react-dropzone-component/styles/filepicker.css';
@@ -9,15 +8,11 @@ import {
   Divider,
   Grid,
   Header,
-  Icon,
   Image,
   List,
   Menu,
   Segment,
-  Visibility,
-  Dropdown,
 } from 'semantic-ui-react'
-import ReactWavesurfer from 'react-wavesurfer';
 import TrackBox from './components/trackbox.js';
 import { TrackUploadBox } from './components/track_upload_box.js'
 
@@ -26,7 +21,7 @@ class TrackList extends Component {
     let trackList = this.props.tracks;
     let removetrack = this.props.removetrack;
     const trackListRendered = Object.keys(trackList).map(function(key) {
-      return <TrackBox track={trackList[key]} removetrack={removetrack} />;
+      return <TrackBox key={trackList[key].id} track={trackList[key]} removetrack={removetrack} />;
     });
 
     return (<span> {trackListRendered} </span>);
@@ -53,7 +48,7 @@ class App extends Component {
 
   removeTrack(id) {
     this.setState(prevState => ({
-      tracks: prevState.tracks.filter(el => el.id != id )
+      tracks: prevState.tracks.filter(el => el.id !== id )
     }));
   }
 
