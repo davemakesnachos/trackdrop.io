@@ -26,7 +26,6 @@ class TrackList extends Component {
     let trackList = this.props.tracks;
     let removetrack = this.props.removetrack;
     const trackListRendered = Object.keys(trackList).map(function(key) {
-      console.log(trackList[key]);
       return <TrackBox track={trackList[key]} removetrack={removetrack} />;
     });
 
@@ -49,7 +48,7 @@ class App extends Component {
     return fetch('http://192.168.33.10/api/v1/tracks', {
       accept: 'application/json',
     }).then((response) => { return response.json(); })
-      .then((json) => { console.log(json); this.setState({tracks: json.tracks}) });
+      .then((json) => { this.setState({tracks: json.tracks}) });
   }
 
   removeTrack(id) {
