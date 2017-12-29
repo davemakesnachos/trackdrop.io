@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import '../App.css';
 import {
     Card,
-    Divider,
-    Feed,
     Image,
     Icon,
     Grid,
