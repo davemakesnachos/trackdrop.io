@@ -40,7 +40,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    return fetch('http://192.168.33.10/api/v1/tracks', {
+    return fetch('/api/v1/tracks', {
       accept: 'application/json',
     }).then((response) => { return response.json(); })
       .then((json) => { this.setState({tracks: json.tracks}) });
