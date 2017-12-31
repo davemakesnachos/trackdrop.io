@@ -36,6 +36,7 @@ class App extends Component {
       tracks: {}
     };
 
+    this.addTracks = this.addTracks.bind(this);
     this.removeTrack = this.removeTrack.bind(this);
   }
 
@@ -44,6 +45,12 @@ class App extends Component {
       accept: 'application/json',
     }).then((response) => { return response.json(); })
       .then((json) => { this.setState({tracks: json.tracks}) });
+  }
+
+  addTracks(tracks) {
+    this.setState(prevState => ({
+      tracks: Array.from(tracks).concat(prevState.tracks)
+    }));
   }
 
   removeTrack(id) {
@@ -67,7 +74,7 @@ class App extends Component {
       </Container>
     </Menu>
     <Container style={{ marginTop: '7em' }}>
-      <TrackUploadBox />
+      <TrackUploadBox addtracks={this.addTracks} />
       <TrackList tracks={this.state.tracks} removetrack={this.removeTrack}/>
     </Container>
     <Segment

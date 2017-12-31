@@ -13,12 +13,17 @@ export class TrackUploadBox extends Component {
     constructor(props) {
         super(props);
 
+        this.uploadSuccess = this.uploadSuccess.bind(this);
+
         this.eventHandlers = {
-            success: this.success,
+            success: this.uploadSuccess.bind(this),
         }
     }
 
-    success(file, response) {
+
+
+    uploadSuccess(file, response){
+        this.props.addtracks(response.tracks);
     }
 
     render() {
