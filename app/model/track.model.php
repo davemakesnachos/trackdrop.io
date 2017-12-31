@@ -5,10 +5,10 @@
  * Trackdrop (c) 2016
  */
 namespace App\Model;
- 
+
 use Core\Model;
 use App\Model\TrackWaveDataModel;
- 
+
 class TrackModel extends Model
 {
 	protected $table = "tracks";
@@ -27,16 +27,16 @@ class TrackModel extends Model
 	{
 		$trackWaveData = new TrackWaveDataModel;
 
-		$tempFile = $file['tmp_name'];           
-	      
+		$tempFile = $file['tmp_name'];
+
 	    $targetPath = get_config('upload_folder') . '/';
-	     
+
 	    $file_hash = $this->hash_file($file);
 
-	    $targetFile =  $targetPath . $file_hash;
+	    $targetFile =  $targetPath . $file_hash . '.mp3';
 
 	    $twd = $trackWaveData->build_waveform($tempFile);
-	 
+
 	    $ret = move_uploaded_file($tempFile, $targetFile);
 
 	    if (!$ret) {
@@ -69,8 +69,8 @@ class TrackModel extends Model
 		while (!feof($file))
 		{
 			$sha_hash_ctx = hash_init('sha256');
-			
-			$file_data = null;	
+
+			$file_data = null;
 
 			$data = fread($file, 4096);
 			hash_update($sha_hash_ctx, $data);
@@ -78,6 +78,6 @@ class TrackModel extends Model
 
 		$file_sha_hash = hash_final($sha_hash_ctx); //get file hash
 
-		return	$file_sha_hash;	
+		return	$file_sha_hash;
 	}
 }
