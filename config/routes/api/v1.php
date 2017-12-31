@@ -9,6 +9,12 @@ Router::addApi([
 ]);
 
 Router::addApi([
+    'url' => '/api/v1/track/upload',
+    'controller' => 'TrackController',
+    'method' => 'upload',
+]);
+
+Router::addApi([
     'url' => '/api/v1/track/delete/{id}',
     'controller' => 'TrackController',
     'method' => 'delete',
