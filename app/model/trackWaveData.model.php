@@ -5,9 +5,9 @@
  * Trackdrop (c) 2017
  */
 namespace App\Model;
- 
+
 use Core\Model;
- 
+
 class TrackWaveDataModel extends Model
 {
 	protected $table = "track_wave_data";
@@ -34,7 +34,6 @@ class TrackWaveDataModel extends Model
 
 		if ($ret)
 			die ("Failed to process audio file and get waveform with command: \n". $wave_cmd);
-		print_r($output);
 
 		return file_get_contents($tmpFilename);
 	}
