@@ -29,12 +29,14 @@ class TrackBox extends Component {
     if (!this.state.loaded) {
         this.setState({
             audioFile: this.props.track.streamUrl,
-            loaded: true
+            loaded: true,
+            playing: true
         })
+    } else {
+      this.setState({
+        playing: !this.state.playing,
+      });
     }
-    this.setState({
-      playing: !this.state.playing,
-    });
   }
 
   handlePosChange(e) {
