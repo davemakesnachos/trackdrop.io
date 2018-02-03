@@ -8,8 +8,6 @@ use App\Model\TrackWaveDataModel;
 
 class TrackController extends Controller
 {
-    protected $template = 'home';
-
     public function download()
     {
         $track = new TrackModel();
@@ -22,5 +20,4 @@ class TrackController extends Controller
         header("Content-disposition: attachment; filename=\"" . basename($t->name) . "\"");
         readfile($t->get_download_url());
     }
-
 }
