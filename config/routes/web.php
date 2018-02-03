@@ -16,11 +16,10 @@ Router::addWeb([
     'method' => 'login',
 ]);
 
-/** LOGIN **/
 Router::addWeb([
     'url' => '/track/download/{id}',
     'controller' => 'TrackController',
     'method' => 'download',
+    'outputRaw' => true,
 ]);
-
 ?>
