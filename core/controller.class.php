@@ -85,6 +85,9 @@ class Controller
     {
         switch($this->response_format)
         {
+            case 'raw':
+                break;
+
             case 'json':
                 $this->renderJson();
                 break;

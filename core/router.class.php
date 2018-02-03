@@ -86,6 +86,10 @@ class Router
                     $controller->setResponseFormat('json');
                 }
 
+                /* Allow for self formatting route */
+                if (isset($route['outputRaw']) && ($route['outputRaw'] === true))
+                    $controller->setResponseFormat('raw');
+
                 $controller->run();
 
                 $match = true;
