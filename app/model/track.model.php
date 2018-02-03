@@ -56,7 +56,7 @@ class TrackModel extends Model
 		if (!isset($this->hash))
 			return NULL;
 
-		return get_config('upload_folder') . '/' . $this->hash;
+		return get_config('upload_folder') . '/' . $this->hash . '.mp3';
 	}
 
 	public function hash_file($file)
