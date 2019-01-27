@@ -8,7 +8,7 @@ import {
     Button,
   } from 'semantic-ui-react'
 import { DeleteButton } from './trackbox_delete_modal.js';
-import ReactWavesurfer from 'react-wavesurfer';
+import Waveform from './waveform.js';
 
 class TrackBox extends Component {
   constructor(props) {
@@ -73,24 +73,7 @@ class TrackBox extends Component {
             }
             </Grid.Column>
             <Grid.Column width={14}>
-            <ReactWavesurfer
-                        audioFile={this.state.audioFile}
-                        pos={this.state.pos}
-                        onPosChange={this.handlePosChange}
-                        playing={this.state.playing}
-                        audioPeaks={this.props.track.wave_data.data}
-                        prerender
-                        options={{
-                            waveColor: 'violet',
-                            progressColor: 'purple',
-                            barWidth: 2,
-                            height: 100,
-                            hideScrollbar: true,
-                            backend: 'MediaElement',
-                            mediaType:'audio',
-                            cursorWidth: 0
-                        }}
-                        />
+              <Waveform src={this.state.audioFile} audioPeaks={this.props.track.wave_data.data} playing={this.state.playing}></Waveform>
             </Grid.Column>
             </Grid.Row>
             </Grid>
