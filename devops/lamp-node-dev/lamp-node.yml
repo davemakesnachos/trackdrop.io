@@ -128,6 +128,25 @@
     sudo: yes
     when: dbpwd.changed
 
+  - name: Add proper nodejs ppa
+  - command: curl -sL https://deb.nodesource.com/setup_6.x -o nodesource_setup.sh && bash nodesource_setup.sh
+
+  - name: install nodejs
+    apt: name={{ item }} state=latest
+    with_items:
+      - nodejs
+      - npm
+
+  - name: Install packages based on package.json.
+    npm:
+      path: /var/www/trackdrop-dev/trackdrop-client
+
+  - name: Move foo to bar
+    command: mv /var/www/trackdrop-dev/trackdrop-client/build/* /var/www/trackdrop-dev/public/
+
+  - name: Rename index.html to index.php
+    command: mv /var/www/trackdrop-dev/public/index.html mv /var/www/trackdrop-dev/public/index.php
+
   handlers:
     - name: restart php7-fpm
       service: name=php7.0-fpm state=restarted
