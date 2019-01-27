@@ -7,9 +7,8 @@
     "react-dom": "^16.2.0",
     "react-dropzone-component": "^3.0.0",
     "react-scripts": "1.0.17",
-    "react-wavesurfer": "git+https://github.com/davemakesnachos/react-wavesurfer.git",
     "semantic-ui-react": "^0.77.1",
-    "wavesurfer.js": "^1.1.11"
+    "wavesurfer.js": "^2.1.3"
   },
   "scripts": {
     "start": "react-scripts start",
