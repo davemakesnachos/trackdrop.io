@@ -31,9 +31,13 @@ export default class Waveform extends React.Component {
       height: 100,
       hideScrollbar: true,
       cursorWidth: 0,
+      backend: 'MediaElement',
+      mediaType:'audio',
     })
     this.wavesurfer.load(this.props.src, this.props.audioPeaks, false)
     console.log(this.props.src)
+    this.wavesurfer.backend.peaks = this.props.audioPeaks;
+    this.wavesurfer.drawBuffer();
   }
   componentWillUnmount() {
 
