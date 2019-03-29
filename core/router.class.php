@@ -69,6 +69,8 @@ class Router
                     preg_match('/v([0-9]+)/', $route['url'], $version_match);
                     $major_version = $version_match[1];
                     $class = 'App\Controller\Api\\v'.$major_version.'\\'.$route['controller'];
+                    $params['raw_json'] = file_get_contents('php://input');
+                    $params['json'] = json_decode($params['raw_json'], true);
                 }
 
                 foreach($params as &$param) {
