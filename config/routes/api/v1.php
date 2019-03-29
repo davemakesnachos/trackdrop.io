@@ -19,3 +19,10 @@ Router::addApi([
     'controller' => 'TrackController',
     'method' => 'delete',
 ]);
+
+# User Routes
+Router::addApi([
+    'url' => '/api/v1/user/register',
+    'controller' => 'UserController',
+    'method' => 'register',
+]);
