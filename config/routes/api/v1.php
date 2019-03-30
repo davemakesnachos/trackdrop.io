@@ -26,3 +26,9 @@ Router::addApi([
     'controller' => 'UserController',
     'method' => 'register',
 ]);
+
+Router::addApi([
+    'url' => '/api/v1/login',
+    'controller' => 'SessionController',
+    'method' => 'login',
+]);
