@@ -2,7 +2,7 @@
 /*
  * app/model/session.model.php - Main session model
  *
- * Deatery (c) 2016
+ * Trackdrop (c) 2019
  */
 
 namespace App\Model;
@@ -13,33 +13,22 @@ class SessionModel extends Model
 {
     protected $table = "sessions";
 
-    private function create($user_id)
+    public function create($user_data)
     {
         $access_token = base64_encode(bin2hex(random_bytes(32)));
         $token_pair = array('token' => $access_token,
-                            'user_id' => $user_id);
-        $result = $this->insert($token_pair);
+                            'user_id' => $user_data);
+        $insert_id = $this->insert($token_pair);
 
-        return $access_token;
+        $result['status'] = 'ok';
+
+        $result['token'] = $access_token;
+
+        return $result;
     }
 
-    public function createWebSession($user_id)
+    public function destroy()
     {
-        $token = $this->create($user_id);
-        if (!$token) {
-            echo 'session creation error';
-            return false;
-        }
-
-        /* 60 day cookie */
-        $result = setcookie(get_config('web_token_cookie_name'), $token, time()+60*60*24*30, '/');
-
-        return true;
-    }
-
-    public function destroySession()
-    {
-        setcookie(get_config('web_token_cookie_name'), '', time() - 3600);
         return $this->delete('id = ' . $this->id);
     }
 
@@ -55,7 +44,8 @@ class SessionModel extends Model
 
     static function checkSession()
     {
-        $token = (isset($_COOKIE[get_config('web_token_cookie_name')]) ? $_COOKIE[get_config('web_token_cookie_name')] : false);
+        $headers = $_SERVER;
+        $token = (isset($headers[get_config('session_token_name')]) ? $headers[get_config('session_token_name')] : false);
 
         if (!$token) {
             return null;
@@ -68,31 +58,4 @@ class SessionModel extends Model
         else
             return null;
     }
-
-    static function redirectIfLoggedIn($redirect)
-    {
-        $session = self::checkSession();
-
-        if ($session) {
-            return $session;
-        } else {
-            header("Location: $redirect");
-            // TODO: error
-            die();
-        }
-    }
-
-    static function redirectIfNotLoggedIn($redirect)
-    {
-        $session = self::checkSession();
-
-        if (!$session) {
-            return $session;
-        } else {
-            header("Location: $redirect");
-            // TODO: error
-            die();
-        }
-    }
 }
-
