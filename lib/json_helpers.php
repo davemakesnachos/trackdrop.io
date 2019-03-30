@@ -1,22 +1,25 @@
 <?php
 
-function json_response_success($params)
+function json_response($status, $params)
 {
-	$params['status'] = 'ok';
+	$params['status'] = $status;
 
 	json_encode($params);
+
+	header('HTTP/'.$status);
 
 	return $params;
 }
 
-function json_response_fail($params, $msg = "")
+function json_response_success($params = [])
 {
-	$params['status'] = 'fail';
+	return json_response(200, $params);
+}
+
+function json_response_fail($status, $params, $msg = "")
+{
 	$params['msg'] = $msg;
-
-	json_encode($params);
-
-	return $params;
+	return json_response($status, $params);
 }
 
 function raw_xml_to_json($raw_xml)
