@@ -21,8 +21,12 @@ class UserController extends Controller
                            "password" => $json_data_input['password'],
                            "name" => $json_data_input['name']);
 
-        $user_id = $user->create($user_data);
-        $response = ['status' => 'OK'];
+        $result = $user->create($user_data);
+        if ($result['status'] == "fail") {
+            $response = json_response_fail(400, [], $result['error']);
+        } else {
+            $response = json_response_success(["id" => $result['user_id'] ]);
+        }
         $this->data('response', $response);
     }
 
