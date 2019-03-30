@@ -16,7 +16,7 @@ define('SITE_URL', $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST']);
 $config['db_user'] = '';
 $config['db_password'] = '';
 
-$config['web_token_cookie_name'] = 'tk';
+$config['session_token_name'] = 'HTTP_ATDTK';
 
 require_once('local_config.php');
 //require_once('private_config.php');
