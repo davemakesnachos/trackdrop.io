@@ -39,18 +39,10 @@ class Controller
         if($this->logged_in) {
             $session_data = SessionModel::checkSession();
             $this->user_data = UserModel::find($session_data->user_id);
-
-            // store restaurant info as member variable
-            $restaurant_user = RestaurantUserModel::findBy(['user_id' => $this->user_data->id]);
-            if ($restaurant_user) {
-                $this->restaurant_data = RestaurantModel::find($restaurant_user->restaurant_id);
-            }
         }
 
         $this->data('is_logged_in', $this->logged_in);
         $this->data('user_data', $this->user_data);
-        $this->data('restaurant_data', $this->restaurant_data);
-
     }
 
     protected function setHtmlTemplate($html_template)
