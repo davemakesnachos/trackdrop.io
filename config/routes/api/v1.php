@@ -32,3 +32,9 @@ Router::addApi([
     'controller' => 'SessionController',
     'method' => 'login',
 ]);
+
+Router::addApi([
+    'url' => '/api/v1/logout',
+    'controller' => 'SessionController',
+    'method' => 'logout',
+]);

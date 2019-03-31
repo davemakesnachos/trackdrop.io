@@ -44,4 +44,21 @@ class SessionController extends Controller
 
         $this->data('response', $response);
     }
+
+    public function logout()
+    {
+        $session = SessionModel::checkSession();
+        if (!$session) {
+            $response = json_response_fail(404, [], "Invalid session token.");
+        } else {
+            $rows_deleted = $session->destroy();
+            if ($rows_deleted == 1) {
+                $response = json_response_success([]);
+            } else {
+                $response = json_response_fail(404, [], "Invalid session token.");
+            }
+        }
+
+        $this->data('response', $response);
+    }
 }
