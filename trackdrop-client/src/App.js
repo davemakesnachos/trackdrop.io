@@ -13,50 +13,11 @@ import {
   Menu,
   Segment,
 } from 'semantic-ui-react'
-import TrackBox from './components/trackbox.js';
-import { TrackUploadBox } from './components/track_upload_box.js'
-
-class TrackList extends Component {
-  render() {
-    let trackList = this.props.tracks;
-    let removetrack = this.props.removetrack;
-    const trackListRendered = Object.keys(trackList).map(function(key) {
-      return <TrackBox key={trackList[key].id} track={trackList[key]} removetrack={removetrack} />;
-    });
-
-    return (<span> {trackListRendered} </span>);
-  }
-}
+import { UserTracks } from './components/user_tracks.js'
 
 class App extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      tracks: {}
-    };
-
-    this.addTracks = this.addTracks.bind(this);
-    this.removeTrack = this.removeTrack.bind(this);
-  }
-
-  componentDidMount() {
-    return fetch('/api/v1/tracks', {
-      accept: 'application/json',
-    }).then((response) => { return response.json(); })
-      .then((json) => { this.setState({tracks: json.tracks}) });
-  }
-
-  addTracks(tracks) {
-    this.setState(prevState => ({
-      tracks: Array.from(tracks).concat(prevState.tracks)
-    }));
-  }
-
-  removeTrack(id) {
-    this.setState(prevState => ({
-      tracks: prevState.tracks.filter(el => el.id !== id )
-    }));
   }
 
   render() {
@@ -73,10 +34,7 @@ class App extends Component {
         </Menu.Item>
       </Container>
     </Menu>
-    <Container style={{ marginTop: '7em' }}>
-      <TrackUploadBox addtracks={this.addTracks} />
-      <TrackList tracks={this.state.tracks} removetrack={this.removeTrack}/>
-    </Container>
+      <UserTracks />
     <Segment
       inverted
       vertical
