@@ -36,10 +36,10 @@ export class UserTracks extends Component {
 
     render() {
         return (
-        <Container style={{ marginTop: '7em' }}>
-            <TrackUploadBox addtracks={this.addTracks} />
-            <TrackList tracks={this.state.tracks} removetrack={this.removeTrack}/>
-        </Container>
+            <div>
+                <TrackUploadBox addtracks={this.addTracks} />
+                <TrackList tracks={this.state.tracks} removetrack={this.removeTrack}/>
+            </div>
         );
     }
 }
