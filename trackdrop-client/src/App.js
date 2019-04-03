@@ -14,6 +14,9 @@ import {
   Segment,
 } from 'semantic-ui-react'
 import { UserTracks } from './components/user_tracks.js'
+import { Login } from './components/login.js'
+import { Register } from './components/register.js'
+import { Route, Link } from 'react-router-dom';
 
 class App extends Component {
   constructor(props) {
@@ -29,12 +32,20 @@ class App extends Component {
           trackdrop.io
         </Menu.Item>
         <Menu.Item position='right'>
+        <Link to='/login'>
         <Button as='a' inverted>Log in</Button>
+        </Link>
+        <Link to="/register">
         <Button as='a' inverted style={{ marginLeft: '0.5em' }}>Sign Up</Button>
+        </Link>
         </Menu.Item>
       </Container>
     </Menu>
-      <UserTracks />
+    <Container style={{ marginTop: '7em' }}>
+      <Route path='/login' component={Login} />
+      <Route path='/register' component={Register} />
+      <Route path='/tracks' component={UserTracks} />
+    </Container>
     <Segment
       inverted
       vertical
