@@ -6,7 +6,7 @@ function json_response($status, $params)
 
 	json_encode($params);
 
-	header('HTTP/'.$status);
+	header('HTTP/'.$status, true, $status);
 
 	return $params;
 }

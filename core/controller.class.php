@@ -93,7 +93,7 @@ class Controller
     private function renderJson()
     {
         header('Access-Control-Allow-Origin: *');
-        header('Content-type:application/json');
+        header('Content-type: application/json', true, $this->data['response']['status']);
         echo json_encode($this->data['response']);
     }
 
