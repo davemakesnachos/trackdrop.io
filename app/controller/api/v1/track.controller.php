@@ -46,10 +46,17 @@ class TrackController extends Controller
 
     public function upload()
     {
+        if (!$this->logged_in) {
+            $response = json_response_fail(401, [], "User Not Authorized");
+            $this->data('response', $response);
+            return;
+        }
+
         $track = new TrackModel();
+        $user_id = $this->user_data->id;
 
         if (!empty($_FILES)) {
-            $track_id_list[] = $track->upload($_FILES['file']);
+            $track_id_list[] = $track->upload($_FILES['file'], $user_id);
         }
 
         if (!empty($track_id_list)) {
