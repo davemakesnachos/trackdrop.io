@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
-import './node_modules/dropzone/dist/min/dropzone.min.css';
-import './node_modules/react-dropzone-component/styles/filepicker.css';
+import 'dropzone/dist/min/dropzone.min.css';
+import 'react-dropzone-component/styles/filepicker.css';
 import {
   Button,
   Container,
