@@ -19,7 +19,8 @@ class UserController extends Controller
         $json_data_input = $this->params['json'];
         $user_data = array("email" => $json_data_input['email'],
                            "password" => $json_data_input['password'],
-                           "name" => $json_data_input['name']);
+                           "name" => $json_data_input['name'],
+                           "code" => $json_data_input['code']);
 
         $result = $user->create($user_data);
         if ($result['status'] == "fail") {
