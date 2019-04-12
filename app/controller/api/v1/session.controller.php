@@ -13,15 +13,15 @@ class SessionController extends Controller
     {
         $json_data_input = $this->params['json'];
 
-        $email = $json_data_input['email'];
+        $email = $json_data_input['username'];
         $password = $json_data_input['password'];
 
         $user = UserModel::findBy(array("email" => $email));
 
         if (!$user) {
-            $response = ['status' => 'User Not Found'];
+            $response = json_response_fail(400, [], "User and password combination not found in database.");
             $this->data('response', $response);
-            exit();
+            return;
         }
 
         $logged_in = $user->authenticate($password);
