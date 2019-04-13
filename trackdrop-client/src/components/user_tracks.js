@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { TrackUploadBox } from './track_upload_box.js'
 import { TrackList } from './tracklist.js';
 import { Container } from 'semantic-ui-react'
+import axiosAuthed from '../lib/auth.js';
 
 export class UserTracks extends Component {
     constructor(props) {
@@ -16,9 +17,8 @@ export class UserTracks extends Component {
     }
 
     componentDidMount() {
-        return fetch('/api/v1/tracks', {
-        accept: 'application/json',
-        }).then((response) => { return response.json(); })
+        const axios = axiosAuthed();
+        return axios.get('/api/v1/tracks').then((response) => { return response.data; })
         .then((json) => { this.setState({tracks: json.tracks}) });
     }
 

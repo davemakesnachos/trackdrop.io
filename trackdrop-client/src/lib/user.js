@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axiosAuthed from './auth.js';
 
 export const userService = {
     login,
@@ -7,19 +7,16 @@ export const userService = {
 };
 
 function login(userAuthCredentials) {
+    const axios = axiosAuthed();
     return axios.post(`/api/v1/login`, userAuthCredentials);
 }
 
 function logout() {
-    return axios.post(`/api/v1/logout`, {});
+    const axios = axiosAuthed();
+    return axios.get(`/api/v1/logout`, {});
 }
 
 function register(user) {
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(user)
-    };
-
+    const axios = axiosAuthed();
     return axios.post(`/api/v1/user/register`, user);
 }

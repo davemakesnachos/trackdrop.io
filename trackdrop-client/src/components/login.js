@@ -7,8 +7,11 @@ import {
     Form,
 } from 'semantic-ui-react'
 import { userService } from '../lib/user.js'
+import { connect } from 'react-redux';
+import { userActions } from '../actions';
 
-export function Login(props) {
+
+function Login(props) {
 
     const initialState = {
         username: "",
@@ -25,14 +28,18 @@ export function Login(props) {
         setError("");
         userService.login(state)
             .then(function (response) {
+                const user_data = {
+                    name: response.data.name,
+                    token: response.data.token,
+                   };
+                localStorage.setItem('user', JSON.stringify(user_data));
+                props.dispatch(userActions.login(user_data));
                 setTimeout(() => {
                     props.history.push('/tracks');
                 }, 1000)
-
             })
             .catch(function (error) {
                 setIsLoading(false);
-                console.log(error.response)
                 setError(error.response.data.msg);
             });
 
@@ -66,3 +73,13 @@ export function Login(props) {
         </div>
     )
 }
+
+function mapStateToProps(state) {
+    const { userData } = state.user;
+    return {
+        userData
+    };
+}
+
+const connectedLogin = connect(mapStateToProps)(Login);
+export { connectedLogin as Login };

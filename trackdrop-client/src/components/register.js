@@ -34,7 +34,6 @@ export function Register(props) {
             })
             .catch(function (error) {
                 setIsLoading(false);
-                console.log(error.response)
                 setRegistrationError(error.response.data.msg);
             });
 

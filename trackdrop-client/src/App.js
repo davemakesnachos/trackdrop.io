@@ -12,19 +12,32 @@ import {
   List,
   Menu,
   Segment,
+  Dropdown
 } from 'semantic-ui-react'
 import { UserTracks } from './components/user_tracks.js'
 import { Login } from './components/login.js'
 import { Register } from './components/register.js'
 import { Route, Link } from 'react-router-dom';
+import { ProtectedRoute } from './components/protected_route.js'
+import { connect } from 'react-redux';
+import { userService } from './lib/user.js'
+import { userActions } from './actions';
 
-class App extends Component {
-  constructor(props) {
-    super(props);
+function App(props) {
+  const doLogout = () => {
+    userService.logout()
+      .then(function (response) {
+        localStorage.removeItem('user');
+        props.dispatch(userActions.logout());
+      })
+      .catch(function (error) {
+        localStorage.removeItem('user');
+        props.dispatch(userActions.logout());
+      })
+      .then(function () {
+      });
   }
-
-  render() {
-    return (
+  return (
       <div>
     <Menu fixed='top' inverted size='large'>
       <Container>
@@ -32,19 +45,30 @@ class App extends Component {
           trackdrop.io
         </Menu.Item>
         <Menu.Item position='right'>
-        <Link to='/login'>
-        <Button as='a' inverted>Log in</Button>
-        </Link>
-        <Link to="/register">
-        <Button as='a' inverted style={{ marginLeft: '0.5em' }}>Sign Up</Button>
-        </Link>
+          { (props.userData && (props.userData.logged_in === true))
+            ?   <div className="content">
+                  <Dropdown item text={props.userData.name}>
+                    <Dropdown.Menu>
+                      <Dropdown.Item onClick={doLogout}>Logout</Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </div>
+            :   <div>
+                <Link to='/login'>
+                <Button inverted>Log in</Button>
+                </Link>
+                <Link to="/register">
+                <Button inverted style={{ marginLeft: '0.5em' }}>Sign Up</Button>
+                </Link>
+                </div>
+          }
         </Menu.Item>
       </Container>
     </Menu>
     <Container style={{ marginTop: '7em' }}>
       <Route path='/login' component={Login} />
       <Route path='/register' component={Register} />
-      <Route path='/tracks' component={UserTracks} />
+      <ProtectedRoute path='/tracks' component={UserTracks} />
     </Container>
     <Segment
       inverted
@@ -104,7 +128,12 @@ class App extends Component {
     </Segment>
   </div>
     );
-  }
+}
+function mapStateToProps(state) {
+  return {
+      userData: state.user
+  };
 }
 
-export default App;
+const connectedApp = connect(mapStateToProps)(App);
+export { connectedApp as App };

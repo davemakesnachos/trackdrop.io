@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import DropzoneComponent from 'react-dropzone-component';
+import { authHeader } from '../lib/auth.js'
 
 var componentConfig = {
     iconFiletypes: ['.mp3'],
@@ -7,7 +8,12 @@ var componentConfig = {
     postUrl: '/api/v1/track/upload'
 };
 
-var djsConfig = { autoProcessQueue: true }
+var djsConfig = {
+    autoProcessQueue: true,
+    headers: {
+        ...authHeader()
+    }
+};
 
 export class TrackUploadBox extends Component {
     constructor(props) {
