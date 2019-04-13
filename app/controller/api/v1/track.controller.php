@@ -10,6 +10,12 @@ class TrackController extends Controller
 {
     public function allTracks()
     {
+        if (!$this->logged_in) {
+            $response = json_response_fail(401, [], "Unauthorized");
+            $this->data('response', $response);
+            return;
+        }
+
         $track = new TrackModel();
 
         $tracks = $track->findAll(500, "created DESC");
