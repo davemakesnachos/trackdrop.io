@@ -45,13 +45,20 @@ class SessionModel extends Model
     static function checkSession()
     {
         $headers = $_SERVER;
-        $token = (isset($headers[get_config('session_token_name')]) ? $headers[get_config('session_token_name')] : false);
+        $token = (isset($headers['HTTP_AUTHORIZATION']) ? $headers['HTTP_AUTHORIZATION'] : false);
 
         if (!$token) {
             return null;
         }
 
+        $token = explode(" ", $token);
+
+        if ($token[0] == 'Bearer')
+            $token = $token[1];
+
         $session = self::findBy(array("token" => $token));
+
+
 
         if ($session)
             return $session;
