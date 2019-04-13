@@ -36,7 +36,7 @@ class SessionController extends Controller
             $result = $session->create($user->id);
 
             if ($result['status'] != 'fail') {
-                $response = json_response_success(['token' => $result['token'] ]);
+                $response = json_response_success(['token' => $result['token'], "name" => $user->name]);
             } else {
                 $response = json_response_fail(400, [],  'Not Logged In');
             }
