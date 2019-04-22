@@ -59,33 +59,53 @@ function TrackdropHeader(props) {
         <Header
         brand="trackdrop.io"
         color="white"
-        rightLinks={
-        <List className={classes.list}>
+        rightLinks={(props.userData && (props.userData.logged_in === true))
+            ? <List className={classes.list}>
+                <ListItem className={classes.listItem}>
+                    <Button
+                    href="#pablo"
+                    className={classes.navLink}
+                    onClick={e => e.preventDefault()}
+                    color="transparent"
+                    >
+                        Discover
+                    </Button>
+                </ListItem>
+                <ListItem className={classes.listItem}>
+                    <CustomDropdown
+                    right
+                    onClick={handleDropdownClick}
+                    hoverColor="info"
+                    buttonIcon={AccountCircle}
+                    buttonText={props.userData.name}
+                    buttonProps={{
+                        className: classes.navLink,
+                        color: "transparent"
+                    }}
+                    dropdownList={ [
+                        <Link to='/logout'>Sign out</Link>
+                    ] }
+                    />
+                </ListItem>
+            </List>
+            : <List className={classes.list}>
             <ListItem className={classes.listItem}>
-            <Button
-                href="#pablo"
+                <Button
+                href="/register"
                 className={classes.navLink}
-                onClick={e => e.preventDefault()}
-                color="transparent"
-            >
-                Discover
-            </Button>
+                color="green"
+                >
+                    Register
+                </Button>
             </ListItem>
             <ListItem className={classes.listItem}>
-                <CustomDropdown
-                right
-                onClick={handleDropdownClick}
-                hoverColor="info"
-                buttonIcon={AccountCircle}
-                buttonText={props.userData.name}
-                buttonProps={{
-                    className: classes.navLink,
-                    color: "transparent"
-                }}
-                dropdownList={ [
-                    <Link to='/logout'>Sign out</Link>
-                ] }
-                />
+                <Button
+                href="/login"
+                className={classes.navLink}
+                color="transparent"
+                >
+                    Login
+                </Button>
             </ListItem>
         </List>
         }
