@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { TrackUploadBox } from './track_upload_box.js'
 import { TrackList } from './tracklist.js';
-import { Container } from 'semantic-ui-react'
 import axiosAuthed from '../lib/auth.js';
+import Grid from '@material-ui/core/Grid';
+import withStyles from "@material-ui/core/styles/withStyles";
 
-export class UserTracks extends Component {
+class UserTracks extends Component {
     constructor(props) {
         super(props);
 
@@ -37,9 +38,31 @@ export class UserTracks extends Component {
     render() {
         return (
             <div>
-                <TrackUploadBox addtracks={this.addTracks} />
-                <TrackList tracks={this.state.tracks} removetrack={this.removeTrack}/>
+                <Grid container spacing={24} className={this.props.classes.layout}>
+                    <Grid item xs={12}>
+                        <TrackUploadBox addtracks={this.addTracks} />
+                        <TrackList tracks={this.state.tracks} removetrack={this.removeTrack}/>
+                    </Grid>
+                </Grid>
             </div>
         );
     }
 }
+
+const styles = theme => ({
+    layout: {
+      width: 'auto',
+      marginLeft: theme.spacing.unit,
+      marginRight: theme.spacing.unit,
+      paddingTop: theme.spacing.unit * 4,
+      paddingBottom: theme.spacing.unit * 4,
+      [theme.breakpoints.up(1100 + theme.spacing.unit * 3 * 2)]: {
+        width: 1100,
+        marginLeft: 'auto',
+        marginRight: 'auto',
+      },
+    }
+  });
+
+const styledUserTracks = withStyles(styles)(UserTracks);
+export { styledUserTracks as UserTracks };

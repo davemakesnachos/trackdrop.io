@@ -1,88 +1,155 @@
 import React, { Component } from 'react';
 import '../App.css';
-import {
-    Card,
-    Image,
-    Icon,
-    Grid,
-    Button,
-  } from 'semantic-ui-react'
 import { DeleteButton } from './trackbox_delete_modal.js';
 import Waveform from './waveform.js';
 
-class TrackBox extends Component {
-  constructor(props) {
-    super(props);
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import classnames from 'classnames';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardMedia from '@material-ui/core/CardMedia';
+import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
+import Avatar from '@material-ui/core/Avatar';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import red from '@material-ui/core/colors/red';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import ShareIcon from '@material-ui/icons/Share';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import Button from './CustomButtons/Button.jsx';
+import PlayIcon from '@material-ui/icons/PlayArrow';
+import PauseIcon from '@material-ui/icons/Pause';
 
-    this.state = {
-      playing: false,
-      pos: 0,
-      loaded: false,
-      audioFile: ''
-    };
-    this.handleTogglePlay = this.handleTogglePlay.bind(this);
-    this.handlePosChange = this.handlePosChange.bind(this);
-    this.confirmDelete = this.confirmDelete.bind(this);
+const styles = theme => ({
+  card: {
+    marginTop: '10px',
+  },
+  cardHeader: {
+    backgroundColor: theme.palette.grey[200],
+  },
+  media: {
+    height: 0,
+    paddingTop: '56.25%', // 16:9
+  },
+  actions: {
+    display: 'flex',
+  },
+  expand: {
+    transform: 'rotate(0deg)',
+    marginLeft: 'auto',
+    transition: theme.transitions.create('transform', {
+      duration: theme.transitions.duration.shortest,
+    }),
+  },
+  expandOpen: {
+    transform: 'rotate(180deg)',
+  },
+  avatar: {
+    backgroundColor: red[500],
+  },
+  controlButton: {
+    marginRight: theme.spacing.unit,
+  },
+  trackPlayerContent: {
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: '-20px',
+  },
+  waveformBox: {
+    display: 'inline',
+    width: '100%',
+    marginLeft: "10px",
   }
+});
 
-  handleTogglePlay() {
-    if (!this.state.loaded) {
-        this.setState({
-            audioFile: this.props.track.streamUrl,
-            loaded: true,
-            playing: true
-        })
-    } else {
-      this.setState({
-        playing: !this.state.playing,
-      });
+class TrackBox extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+        playing: false,
+        pos: 0,
+        loaded: false,
+        audioFile: ''
+        };
+        this.handleTogglePlay = this.handleTogglePlay.bind(this);
+        this.handlePosChange = this.handlePosChange.bind(this);
+        this.confirmDelete = this.confirmDelete.bind(this);
     }
-  }
 
-  handlePosChange(e) {
-    this.setState({
-      pos: e.originalArgs[0]
-    });
-  }
+    handleTogglePlay() {
+        if (!this.state.loaded) {
+            this.setState({
+                audioFile: this.props.track.streamUrl,
+                loaded: true,
+                playing: true
+            })
+        } else {
+            this.setState({
+                playing: !this.state.playing,
+            });
+        }
+    }
 
-  confirmDelete() {
-    let removeTrack = this.props.removetrack;
-    fetch('/api/v1/track/delete/' + this.props.track.id, {
-        accept: 'application/json',
-      }).then(() => {
-        removeTrack(this.props.track.id);
-    })
-  }
-  render() {
-    return (
-        <Card fluid>
-        <Card.Content>
-          <Card.Header>
-                <Image src="profile-blank.png" size='mini' circular spaced='right'/>
-                {this.props.track.name}
-          </Card.Header>
-        </Card.Content>
-        <Card.Content>
-        <Grid >
-          <Grid.Row>
-            <Grid.Column width={2} verticalAlign='middle' textAlign='center'>
-            {
-                this.state.playing
-                ? <Icon link name='pause' size='huge' onClick={this.handleTogglePlay}/>
-                : <Icon link name='play' size='huge' onClick={this.handleTogglePlay}/>
+    handlePosChange(e) {
+        this.setState({
+        pos: e.originalArgs[0]
+        });
+    }
+
+    confirmDelete() {
+        let removeTrack = this.props.removetrack;
+        fetch('/api/v1/track/delete/' + this.props.track.id, {
+            accept: 'application/json',
+        }).then(() => {
+            removeTrack(this.props.track.id);
+        })
+    }
+
+    render() {
+        const { classes } = this.props;
+
+        return (
+        <Card className={classes.card}>
+            <CardHeader
+            avatar={
+                <Avatar aria-label="Recipe" className={classes.avatar}>
+                R
+                </Avatar>
             }
-            </Grid.Column>
-            <Grid.Column width={14}>
-              <Waveform src={this.state.audioFile} audioPeaks={this.props.track.wave_data.data} playing={this.state.playing}></Waveform>
-            </Grid.Column>
-            </Grid.Row>
-            </Grid>
-            <DeleteButton show={this.state.deleteShow} track={this.props.track} confirmdelete={this.confirmDelete}/>
-            <Button color='green' size="mini" href={this.props.track.downloadUrl} floated='right'>Download</Button>
-        </Card.Content>
-      </Card>
-    );
-  }
+            title={this.props.track.name}
+            subheader={this.props.track.user}
+            className={classes.cardHeader}
+            />
+            <CardContent className={classes.trackPlayerContent}>
+                <Button large justIcon round onClick={this.handleTogglePlay} className={classes.controlButton}>
+                    {(this.state.playing)
+                        ? <PauseIcon />
+                        : <PlayIcon />
+                    }
+                </Button>
+                <div className={classes.waveformBox}>
+                    <Waveform src={this.state.audioFile} audioPeaks={this.props.track.wave_data.data} playing={this.state.playing}></Waveform>
+                </div>
+            </CardContent>
+            <CardActions className={classes.actions} disableActionSpacing>
+            <IconButton aria-label="Add to favorites">
+                <FavoriteIcon />
+            </IconButton>
+            <IconButton aria-label="Share">
+                <ShareIcon />
+            </IconButton>
+            </CardActions>
+        </Card>
+        );
+    }
 }
 
-export default TrackBox;
+TrackBox.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(TrackBox);

@@ -3,6 +3,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import WaveSurfer from 'wavesurfer.js'
 
+
 export default class Waveform extends React.Component {
   constructor(props) {
     super(props)
@@ -20,16 +21,16 @@ export default class Waveform extends React.Component {
       }
   }
   componentDidMount() {
-    console.log("inside");
     this.$el = ReactDOM.findDOMNode(this)
     this.$waveform = this.$el.querySelector('.wave')
     this.wavesurfer = WaveSurfer.create({
       container: this.$waveform,
       waveColor: 'violet',
       progressColor: 'purple',
-      barWidth: 2,
+      barWidth: 3,
       height: 100,
       hideScrollbar: true,
+      responsive: true,
       cursorWidth: 0,
       backend: 'MediaElement',
       mediaType:'audio',

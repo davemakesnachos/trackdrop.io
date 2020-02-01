@@ -25,7 +25,7 @@ import profileImage from "../assets/img/faces/avatar.jpg";
 import { userService } from '../lib/user.js'
 import { userActions } from '../actions';
 
-import { Link } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 function TrackdropHeader(props) {
@@ -38,10 +38,12 @@ function TrackdropHeader(props) {
             .then(function (response) {
                 localStorage.removeItem('user');
                 props.dispatch(userActions.logout());
+                props.history.push('/');
             })
             .catch(function (error) {
                 localStorage.removeItem('user');
                 props.dispatch(userActions.logout());
+                props.history.push('/');
             })
             .then(function () {
             });
@@ -55,20 +57,28 @@ function TrackdropHeader(props) {
         }
     }
 
+    console.log("%o", props);
+    console.log(props.location.pathname)
+
     return (
+        <div>
         <Header
         brand="trackdrop.io"
-        color="white"
+        color={(props.location.pathname == '/') ? "transparent" : "white"}
+        fixed
+        changeColorOnScroll={{
+            height: 200,
+            color: "white"
+          }}
         rightLinks={(props.userData && (props.userData.logged_in === true))
             ? <List className={classes.list}>
                 <ListItem className={classes.listItem}>
                     <Button
-                    href="#pablo"
+                    href="/tracks"
                     className={classes.navLink}
-                    onClick={e => e.preventDefault()}
                     color="transparent"
                     >
-                        Discover
+                        Stream
                     </Button>
                 </ListItem>
                 <ListItem className={classes.listItem}>
@@ -83,7 +93,7 @@ function TrackdropHeader(props) {
                         color: "transparent"
                     }}
                     dropdownList={ [
-                        <Link to='/logout'>Sign out</Link>
+                        <Link to='/logout' onClick={e => e.preventDefault()} >Sign out</Link>
                     ] }
                     />
                 </ListItem>
@@ -91,9 +101,10 @@ function TrackdropHeader(props) {
             : <List className={classes.list}>
             <ListItem className={classes.listItem}>
                 <Button
-                href="/register"
-                className={classes.navLink}
-                color="green"
+                  color="danger"
+                  size="sm"
+                  href="/register"
+                  className={classes.navLink}
                 >
                     Register
                 </Button>
@@ -110,6 +121,7 @@ function TrackdropHeader(props) {
         </List>
         }
         />
+        </div>
     );
 }
 
@@ -121,6 +133,6 @@ function mapStateToProps(state) {
     };
 }
 
-const styledTrackdropHeader = withStyles(navbarsStyle)(TrackdropHeader)
+const styledTrackdropHeader = withRouter(withStyles(navbarsStyle)(TrackdropHeader))
 const styledConnectedTrackdropHeader = connect(mapStateToProps)(styledTrackdropHeader);
 export { styledConnectedTrackdropHeader as Header };

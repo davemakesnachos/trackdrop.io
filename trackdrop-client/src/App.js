@@ -2,16 +2,32 @@ import React, { Component } from 'react';
 import './App.css';
 import 'dropzone/dist/min/dropzone.min.css';
 import 'react-dropzone-component/styles/filepicker.css';
+import { Landing } from './components/landing.js';
 import { UserTracks } from './components/user_tracks.js'
 import { Login } from './components/login.js'
 import { Register } from './components/register.js'
-import { Route, Link } from 'react-router-dom';
+import { Route, withRouter, Switch } from 'react-router-dom';
 import { ProtectedRoute } from './components/protected_route.js'
 import { connect } from 'react-redux';
 import { userService } from './lib/user.js'
 import { userActions } from './actions';
 import { Header } from './components/header.js';
 import Grid from '@material-ui/core/Grid';
+import { withStyles } from '@material-ui/core/styles';
+
+const styles = theme => ({
+  layout: {
+    width: 'auto',
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    [theme.breakpoints.up(1100 + theme.spacing.unit * 3 * 2)]: {
+      width: 1100,
+      marginLeft: 'auto',
+      marginRight: 'auto',
+    },
+  },
+  navbar_spacer: theme.mixins.toolbar,
+});
 
 function App(props) {
 
@@ -29,16 +45,22 @@ function App(props) {
         });
     }
 
+    const classes = props.classes;
+
     return (
         <div>
                 <Header />
-                <Grid container spacing={24}>
-                <Grid item xs={12}>
+                {
+                    (props.location.pathname == '/')
+                    ? <div />
+                    : <div className={classes.navbar_spacer} ></div>
+                }
+                <Switch>
                     <Route path='/login' component={Login} />
                     <Route path='/register' component={Register} />
                     <ProtectedRoute path='/tracks' component={UserTracks} />
-            </Grid>
-        </Grid>
+                    <Route path='/' component={Landing} />
+                </Switch>
         </div>
     );
 }
@@ -49,5 +71,5 @@ function mapStateToProps(state) {
     };
 }
 
-const connectedApp = connect(mapStateToProps)(App);
+const connectedApp = withRouter(withStyles(styles)(connect(mapStateToProps)(App)));
 export { connectedApp as App };

@@ -22,6 +22,7 @@ const navbarsStyle = theme => ({
       borderRadius: "0"
     }
   },
+  navbar_spacer: theme.mixins.toolbar,
   navigation: {
     backgroundPosition: "center center",
     backgroundSize: "cover",
