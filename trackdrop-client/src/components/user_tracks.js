@@ -19,8 +19,10 @@ class UserTracks extends Component {
 
     componentDidMount() {
         const axios = axiosAuthed();
-        return axios.get('/api/v1/tracks').then((response) => { return response.data; })
-        .then((json) => { this.setState({tracks: json.tracks}) });
+        return axios.get('/api/v1/tracks').then((response) => { console.log(response); this.setState({tracks: response.data.tracks}) })
+        .catch(error => {
+            console.log('Error', error);
+          });
     }
 
     addTracks(tracks) {
