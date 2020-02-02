@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export default function axiosAuthed() {
     const config = {
-        timeout: 1000,
+        timeout: 30000,
         headers: {
             ...authHeader(),
             accept: 'application/json'
