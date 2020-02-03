@@ -82,6 +82,11 @@ class TrackController extends Controller
                     $t->wave_data = json_decode($d->data);
                 $t->streamUrl = SITE_URL . "/stream/" . $t->hash . ".mp3";
                 $t->downloadUrl = SITE_URL . "/track/download/" . $t->id;
+
+                $u = UserModel::find($t->user_id);
+                if (isset($u))
+                    $t->user = $u->name;
+
                 $track_list[] = $t;
             }
         } else {
