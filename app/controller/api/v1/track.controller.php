@@ -64,6 +64,33 @@ class TrackController extends Controller
         $this->data('response', $response);
     }
 
+    public function trackFromProfileAndName()
+    {
+        $track = new TrackModel();
+
+        $profile = $this->params['profile'];
+        $trackname = addslashes($this->params['track']);
+
+        $u = UserModel::findBy(array("name" => $profile));
+
+        $t = $track->findBy(array("name" => $trackname, "user_id" => $u->id));
+
+        if (empty($t)) {
+            $response = json_response_fail(404, [], "Not Found");
+            $this->data('response', $response);
+            return;
+        } else {
+            $t = $this->buildTrackObject($t);
+
+            $track_list[] = $t;
+        }
+        $response['profile'] = array();
+        $response['profile']['name'] = $u->name;
+        $response['tracks'] = $track_list;
+        $response = json_response_success($response);
+        $this->data('response', $response);
+    }
+
     public function upload()
     {
         if (!$this->logged_in) {

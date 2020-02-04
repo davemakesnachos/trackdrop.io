@@ -20,6 +20,12 @@ Router::addApi([
     'method' => 'delete',
 ]);
 
+Router::addApi([
+    'url' => '/api/v1/track/{profile}/{track}',
+    'controller' => 'TrackController',
+    'method' => 'trackFromProfileAndName',
+]);
+
 # User Routes
 Router::addApi([
     'url' => '/api/v1/user/register',
