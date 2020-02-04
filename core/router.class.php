@@ -43,8 +43,8 @@ class Router
                     continue;
 
             // convert the route custom vars (i.e. {custom_var}) to dynamic regex expression
-            preg_match_all("/{[_a-zA-Z0-9]+}/", $route['url'], $route_custom_vars);
-            $dynamic_route = preg_replace("/{[_a-zA-Z0-9]+}/", "([-_a-zA-z0-9]+)", $route['url']);
+            preg_match_all("/{[_a-zA-Z0-9\.]+}/", $route['url'], $route_custom_vars);
+            $dynamic_route = preg_replace("/{[_a-zA-Z0-9\.]+}/", "([-_a-zA-z0-9\.]+)", $route['url']);
             $dynamic_route = str_replace("/", "\/", $dynamic_route);
 
             // does the dynamic route match the current url?
