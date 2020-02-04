@@ -9,6 +9,22 @@ use App\Model\UserModel;
 
 class TrackController extends Controller
 {
+    public function buildTrackObject($track)
+    {
+        $d = TrackWaveDataModel::findBy(array("track_id" => $track->id));
+        if (isset($d))
+            $track->wave_data = json_decode($d->data);
+        $track->streamUrl = SITE_URL . "/stream/" . $track->hash . ".mp3";
+        $track->downloadUrl = SITE_URL . "/track/download/" . $track->id;
+
+        /* Populate user data */
+
+        $u = UserModel::find($track->user_id);
+        if (isset($u))
+            $track->user = $u->name;
+        return $track;
+    }
+
     public function allTracks()
     {
         if (!$this->logged_in) {
@@ -25,17 +41,7 @@ class TrackController extends Controller
             $track_list = array();
         } else {
             foreach($tracks as $t) {
-                $d = TrackWaveDataModel::findBy(array("track_id" => $t->id));
-                if (isset($d))
-                    $t->wave_data = json_decode($d->data);
-                $t->streamUrl = SITE_URL . "/stream/" . $t->hash . ".mp3";
-                $t->downloadUrl = SITE_URL . "/track/download/" . $t->id;
-
-                /* Populate user data */
-
-                $u = UserModel::find($t->user_id);
-                if (isset($u))
-                    $t->user = $u->name;
+                $t = $this->buildTrackObject($t);
 
                 $track_list[] = $t;
             }
@@ -77,16 +83,7 @@ class TrackController extends Controller
             /* XXX: We must check for missing file/failed upload. */
             foreach($track_id_list as $track_id) {
                 $t = TrackModel::find($track_id);
-                $d = TrackWaveDataModel::findBy(array("track_id" => $t->id));
-                if (isset($d))
-                    $t->wave_data = json_decode($d->data);
-                $t->streamUrl = SITE_URL . "/stream/" . $t->hash . ".mp3";
-                $t->downloadUrl = SITE_URL . "/track/download/" . $t->id;
-
-                $u = UserModel::find($t->user_id);
-                if (isset($u))
-                    $t->user = $u->name;
-
+                $t = $this->buildTrackObject($t);
                 $track_list[] = $t;
             }
         } else {
