@@ -203,9 +203,14 @@ class Model
      *               the caller type with columns as class vars.
      *
      */
-    public function findAllBy($values)
+    public function findAllBy($values, $limit = 500, $order_by = "")
     {
         $model = self::createModel();
+
+        if ($order_by != '')
+            $order_by_string = " ORDER BY " . $order_by;
+        else
+            $order_by_string = '';
 
         $sql = 'SELECT * FROM ' . $model->table . " WHERE ";
 
@@ -214,7 +219,7 @@ class Model
         }
         $sql = substr($sql, 0, -5);
 
-        $model->db->prepare($sql);
+        $model->db->prepare($sql . ' ' . $order_by_string . " LIMIT " . $limit);
         $model->db->execute($values);
         $results = $model->db->fetchAll();
 
