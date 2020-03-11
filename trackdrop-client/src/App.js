@@ -17,6 +17,8 @@ import { Header } from './components/header.js';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 
+import "./assets/scss/material-kit-react.scss?v=1.4.0";
+
 const styles = theme => ({
   layout: {
     width: 'auto',
