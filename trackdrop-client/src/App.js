@@ -4,6 +4,7 @@ import 'dropzone/dist/min/dropzone.min.css';
 import 'react-dropzone-component/styles/filepicker.css';
 import { Landing } from './components/landing.js';
 import { UserTracks } from './components/user_tracks.js'
+import { Profile } from './components/profile.js'
 import { UserTrack } from './components/user_track.js'
 import { Login } from './components/login.js'
 import { Register } from './components/register.js'
@@ -60,6 +61,7 @@ function App(props) {
                     <Route path='/login' component={Login} />
                     <Route path='/register' component={Register} />
                     <Route path='/track/:profile/:track' component={UserTrack} />
+                    <Route path='/tracks/:profile' component={Profile} />
                     <ProtectedRoute path='/tracks' component={UserTracks} />
                     <Route exact path='/' component={Landing} />
                 </Switch>
