@@ -9,6 +9,12 @@ Router::addApi([
 ]);
 
 Router::addApi([
+    'url' => '/api/v1/tracks/{profile}',
+    'controller' => 'TrackController',
+    'method' => 'allTracksForProfile',
+]);
+
+Router::addApi([
     'url' => '/api/v1/track/upload',
     'controller' => 'TrackController',
     'method' => 'upload',

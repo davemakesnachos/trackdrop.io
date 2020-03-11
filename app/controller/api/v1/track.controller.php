@@ -52,6 +52,32 @@ class TrackController extends Controller
         $this->data('response', $response);
     }
 
+    public function allTracksForProfile()
+    {
+
+        $track = new TrackModel();
+
+        $profile = $this->params['profile'];
+
+        $u = UserModel::findBy(array("name" => $profile));
+
+        $tracks = $track->findAllBy(array("user_id" => $u->id), 500, "created DESC");
+
+        if (empty($tracks)) {
+            $track_list = array();
+        } else {
+            foreach($tracks as $t) {
+                $t = $this->buildTrackObject($t);
+
+                $track_list[] = $t;
+            }
+        }
+
+        $response['tracks'] = $track_list;
+        $response = json_response_success($response);
+        $this->data('response', $response);
+    }
+
     public function delete()
     {
         $track = new TrackModel();
