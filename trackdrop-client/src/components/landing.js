@@ -39,10 +39,12 @@ class LandingPage extends React.Component {
               <GridItem xs={12} sm={12} md={6}>
                 <h1 className={classes.title}>Keep Making Music.</h1>
                 <h4>
-                  And share it with no hassle. Easy uploads and versioning allow colloboration and sharing
-                  or both new ideas and completed tracks without worrying. I need more text, but have nothing else to say.
-                  However, without four lines this might look dumb.
+                And share it without hassle. Trackdrop provides a home
+                for both new ideas and completed tracks without worrying.
+                You control who sees the songs: your friends and collaborators,
+                the whole world, or no one at all.
                 </h4>
+                <br />
                 <h3> Have an invite code? </h3>
                 <br />
                 <Button
@@ -64,7 +66,14 @@ class LandingPage extends React.Component {
           <GridItem xs={12} sm={12} md={8}>
             <h2 className={classes.product_title}>Let's talk Trackdrop</h2>
             <h5 className={classes.product_description}>
-              What do we say here? I don't know. Trackdrop is for Dave and Berner to share songs. Whole lot of work just for that...
+            You have a skill: playing guitar, designing synth patches, singing, writing lyrics, composing melodies, mixing the perfect
+            vocal track, arranging sketches into completed songs, mastering polished masterpieces, creating album art & visual effects,
+            publicizing the artist(s), or some combination of these elements.
+            </h5>
+            <h5 className={classes.product_description}>
+            There are very few people with an individual mastery all of these full-time jobs. That's why we created TrackDrop:
+            to connect artists and develop songs before they're ready for the world to enjoy. Tell us what you do best
+            and what you're interested in accomplishing, and we will stand back and let the magic happen.
             </h5>
           </GridItem>
         </GridContainer>
@@ -73,7 +82,7 @@ class LandingPage extends React.Component {
             <GridItem xs={12} sm={12} md={4}>
               <InfoArea
                 title="Communicate"
-                description="Upload songs for others to listen to and provide feedback. Easily add timestamped notes for targeted advice."
+                description="Upload songs for your team to listen and provide feedback. Easily add timestamped notes for targeted advice or, better yet, to make a note of an idea you had to add your element to the incubating masterpiece. "
                 icon={Chat}
                 iconColor="info"
                 vertical
@@ -82,7 +91,7 @@ class LandingPage extends React.Component {
             <GridItem xs={12} sm={12} md={4}>
               <InfoArea
                 title="Build a Library"
-                description="Upload and organize your tracks to listen on the go and get feedback from others."
+                description="Upload and organize your tracks to listen on the go and get feedback from others. Review timestamped comments and have discussions right inside the tracks themselves."
                 icon={LibraryMusic}
                 iconColor="success"
                 vertical
@@ -91,7 +100,7 @@ class LandingPage extends React.Component {
             <GridItem xs={12} sm={12} md={4}>
               <InfoArea
                 title="History"
-                description="Easily archive of old versions of tracks to allow analysis of the progression of songs as they mature to perfection."
+                description="Easily archive of old versions of tracks to allow analysis of the progression of songs as they mature to perfection. Revisit old ideas at any time to make sure you are moving in the direction you want."
                 icon={Update}
                 iconColor="danger"
                 vertical
@@ -110,6 +119,3 @@ class LandingPage extends React.Component {
 
 const styledLanding = withStyles(landingPageStyle)(LandingPage);
 export { styledLanding as Landing };
- //           <ProductSection />
-  //          <TeamSection />
-   //         <WorkSection />
