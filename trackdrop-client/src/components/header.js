@@ -57,18 +57,17 @@ function TrackdropHeader(props) {
         }
     }
 
-    console.log("%o", props);
-    console.log(props.location.pathname)
+    const profileUrl = '/tracks/' + props.userData.name
 
     return (
         <div>
         <Header
         brand="trackdrop.io"
-        color={(props.location.pathname == '/') ? "transparent" : "white"}
+        color={(props.location.pathname == '/') ? "transparent" : "primary"}
         fixed
         changeColorOnScroll={{
             height: 200,
-            color: "white"
+            color: "primary"
           }}
         rightLinks={(props.userData && (props.userData.logged_in === true))
             ? <List className={classes.list}>
@@ -93,6 +92,7 @@ function TrackdropHeader(props) {
                         color: "transparent"
                     }}
                     dropdownList={ [
+                        <Link to={profileUrl} >Profile</Link>,
                         <Link to='/logout' onClick={e => e.preventDefault()} >Sign out</Link>
                     ] }
                     />
