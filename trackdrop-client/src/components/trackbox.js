@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import '../App.css';
 import { DeleteButton } from './trackbox_delete_modal.js';
 import Waveform from './waveform.js';
 
@@ -22,6 +21,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Button from './CustomButtons/Button.jsx';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
+import { withRouter, Link } from 'react-router-dom';
 
 const styles = theme => ({
   card: {
@@ -112,6 +112,8 @@ class TrackBox extends React.Component {
     render() {
         const { classes } = this.props;
 
+        const trackUrl = '/track/' + this.props.track.user + '/' + this.props.track.name;
+        const profileUrl = '/tracks/' + this.props.track.user;
         return (
         <Card className={classes.card}>
             <CardHeader
@@ -120,8 +122,8 @@ class TrackBox extends React.Component {
                 R
                 </Avatar>
             }
-            title={this.props.track.name}
-            subheader={this.props.track.user}
+            title={ <Link to={trackUrl}>{this.props.track.name}</Link> }
+            subheader={<Link to={profileUrl}>{this.props.track.user}</Link> }
             className={classes.cardHeader}
             />
             <CardContent className={classes.trackPlayerContent}>
