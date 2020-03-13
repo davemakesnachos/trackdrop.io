@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import TrackBox from './trackbox.js';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 export class TrackList extends Component {
     render() {
@@ -12,7 +13,10 @@ export class TrackList extends Component {
 
         return (<span> {trackListRendered} </span>);
       } else {
-        return (<span> Upload some tracks! </span>);
+        return (<div style={{display: 'flex', justifyContent: 'center'}}>
+                  <span><br /><br /><br /><br /><br /><CircularProgress /> </span>
+                </div>
+                );
       }
     }
   }
