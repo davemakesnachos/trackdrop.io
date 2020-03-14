@@ -1,21 +1,45 @@
 ---
 - hosts: all
-  sudo: yes
+  vars:
+    NODEJS_VERSION: "10"
+    privateKey: "/home/dave/Projects/trackdrop/devops/keys/deploy_key"
+    privateAppConfig: "/home/dave/Projects/trackdrop/devops/keys/private_config.php"
+    appPath: "/var/www/trackdrop-dev"
 
   tasks:
   - name: Enable UFW
     ufw: direction=incoming policy=deny state=enabled
+    become: yes
 
   - name: UFW limit SSH
     ufw: rule=limit port=ssh
+    become: yes
 
   - name: UFW open HTTP
     ufw: rule=allow port=http
+    become: yes
 
   - name: install git
     apt: name={{ item }} state=latest
     with_items:
       - git
+    become: yes
+
+  - name: Install the gpg key for nodejs LTS
+    apt_key:
+      url: "https://deb.nodesource.com/gpgkey/nodesource.gpg.key"
+      state: present
+
+  - name: Install the nodejs LTS repos
+    apt_repository:
+      repo: "deb https://deb.nodesource.com/node_{{ NODEJS_VERSION }}.x {{ ansible_distribution_release }} main"
+      state: present
+      update_cache: yes
+
+  - name: Install the nodejs
+    apt:
+      name: nodejs
+      state: present
 
   - name: install audiowaveform deps
     apt: name={{ item }} state=latest
@@ -23,51 +47,62 @@
       - libsndfile1
       - libmad0
       - libid3tag0
-      - libboost-program-options1.58.0
-      - libboost-filesystem1.58.0
-      - libboost-regex1.58.0
+      - libboost-program-options1.65.1
+      - libboost-filesystem1.65.1
+      - libboost-regex1.65.1
+    become: yes
 
-  - name: create /var/www/trackdrop-dev directory
-    file: dest=/var/www/trackdrop-dev state=directory owner=www-data group=www-data mode=0700
+  - name: install audiowaveform binary
+    copy:
+      src: /home/dave/git-repos/audiowaveform/audiowaveform
+      dest: /usr/bin/audiowaveform
+      mode: 0755
 
-  - name: create /var/www/trackdrop-dev/config directory
-    file: dest=/var/www/trackdrop-dev/config state=directory owner=www-data group=www-data mode=0700
+  - name: Copy Private Key
+    copy: src={{privateKey}} dest=/root/.ssh/deploy-key mode=0600
+
+  - name: Git Clone Repo
+    git: repo=git@gitlab.com:davemakesnachos/trackdrop.git dest={{appPath}} update=yes force=yes accept_hostkey=yes key_file=/root/.ssh/deploy-key
+    register: git_finished
+    become_user: "www-data"
+
+  - name: Running NPM install
+    npm: path="{{appPath}}/trackdrop-client"
+    register: npm_finished
+    when: git_finished.changed
 
   - name: create /var/www/trackdrop-dev/uploads directory
     file: dest=/var/www/trackdrop-dev/uploads state=directory owner=www-data group=www-data mode=0775
+    become: yes
 
   - name: install nginx
     apt: name={{ item }} state=latest
     with_items:
       - nginx
 
-  - name: install php7
+  - name: install php
     apt: name={{ item }} state=latest
     with_items:
-      - mcrypt
-      - php7.0-cli
-      - php7.0-curl
-      - php7.0-fpm
-      - php7.0-intl
-      - php7.0-json
-      - php7.0-mcrypt
-      - php7.0-mysqlnd
+      - php-cli
+      - php-curl
+      - php-fpm
+      - php-intl
+      - php-json
+      - php-mysqlnd
+    become: yes
 
-  - name: install nodejs
-    apt: name={{ item }} state=latest
-    with_items:
-      - nodejs
-
-  - name: ensure php7.0-fpm cgi.fix_pathinfo=0
-    lineinfile: dest=/etc/php/7.0/fpm/php.ini regexp='^(.*)cgi.fix_pathinfo=' line=cgi.fix_pathinfo=0
+  - name: ensure php7.2-fpm cgi.fix_pathinfo=0
+    lineinfile: dest=/etc/php/7.2/fpm/php.ini regexp='^(.*)cgi.fix_pathinfo=' line=cgi.fix_pathinfo=0
     notify:
-      - restart php7-fpm
+      - restart php7.2-fpm
       - restart nginx
+    become: yes
 
   - name: enable php7 mcrypt module
-    shell: php7enmod mcrypt
+    shell: phpenmod mcrypt
     args:
-      creates: /etc/php/7.0/cli/conf.d/20-mcrypt.ini
+      creates: /etc/php/7.2/cli/conf.d/20-mcrypt.ini
+    become: yes
 
   - name: download composer
     get_url:
@@ -94,11 +129,41 @@
       state: file
     tags: composer
 
+  - composer:
+      command: install
+      working_dir: "{{ appPath }}"
+
   - name: Configure nginx dev site
-    template: src=trackdrop-dev dest=/etc/nginx/sites-available/dev
+    template: src=trackdrop-dev dest=/etc/nginx/sites-enabled/default
     notify:
-      - restart php7-fpm
+      - restart php7.2-fpm
       - restart nginx
+    become: yes
+
+  - name: Configure nginx
+    template: src=nginx.conf dest=/etc/nginx/nginx.conf
+    notify:
+      - restart php7.2-fpm
+      - restart nginx
+
+  - name: ensure php7.2-fpm cgi.fix_pathinfo=0
+    lineinfile: dest=/etc/php/7.2/fpm/php.ini regexp='^(.*)cgi.fix_pathinfo=' line=cgi.fix_pathinfo=0
+    notify:
+      - restart php7.2-fpm
+      - restart nginx
+
+  - name: Set post_max_size
+    lineinfile: dest=/etc/php/7.2/fpm/php.ini
+                regexp='post_max_size(\s)?='
+                line='post_max_size = 128M'
+    notify: restart php7.2-fpm
+
+  - name: Set upload_max_filesize
+    lineinfile: dest=/etc/php/7.2/fpm/php.ini
+                regexp='upload_max_filesize(\s)?='
+                line='upload_max_filesize = 128M'
+                create=yes
+    notify: restart php7.2-fpm
 
   - name: install mysql
     apt: name={{ item }} state=latest
@@ -106,9 +171,14 @@
       - mysql-server
       - python-mysqldb
       - pwgen
+    become: yes
 
   - name: Create MySQL DB
-    mysql_db: name=trackdrop-dev state=present
+    mysql_db:
+      name: trackdrop-dev
+      state: present
+      login_user: root
+      login_unix_socket: /var/run/mysqld/mysqld.sock
 
   - name: Generate DB password
     shell: pwgen 20 1
@@ -117,38 +187,51 @@
     register: dbpwd
 
   - name: Create MySQL User
-    mysql_user: name=trackdrop-dev password={{ dbpwd.stdout }} priv=trackdrop-dev.*:ALL state=present
+    mysql_user:
+      name: trackdrop-dev
+      password: "{{ dbpwd.stdout }}"
+      priv: trackdrop-dev.*:ALL
+      state: present
+      login_user: root
+      login_unix_socket: /var/run/mysqld/mysqld.sock
     when: dbpwd.changed
 
   - name: Configure local app settings
     template: src=local_config.php dest=/var/www/trackdrop-dev/config/
 
+  - name: Configure private app settings
+    copy: src={{privateAppConfig}} dest=/var/www/trackdrop-dev/config/
+
   - name: Save dbpw file
     lineinfile: dest=/var/www/trackdrop-dev/config/.dbpw line="{{ dbpwd.stdout }}" create=yes state=present
-    sudo: yes
+    become: yes
     when: dbpwd.changed
 
-  - name: Add proper nodejs ppa
-  - command: curl -sL https://deb.nodesource.com/setup_6.x -o nodesource_setup.sh && bash nodesource_setup.sh
+  - name: Building ReactJS App with npm run build
+    command: npm run build
+    args:
+      chdir: "{{appPath}}/trackdrop-client"
 
-  - name: install nodejs
-    apt: name={{ item }} state=latest
-    with_items:
-      - nodejs
-      - npm
+  - name: Migrate database
+    shell: "{{appPath}}/vendor/bin/phinx migrate"
+    args:
+      chdir: "{{ appPath }}"
 
-  - name: Install packages based on package.json.
-    npm:
-      path: /var/www/trackdrop-dev/trackdrop-client
+  - name: Collect list of all files generated in build/ after npm run build
+    find:
+      paths: "{{ appPath }}/trackdrop-client/build"
+      file_type: "any"
+    register: find_result
 
-  - name: Move foo to bar
-    command: mv /var/www/trackdrop-dev/trackdrop-client/build/* /var/www/trackdrop-dev/public/
-
-  - name: Rename index.html to index.php
-    command: mv /var/www/trackdrop-dev/public/index.html mv /var/www/trackdrop-dev/public/index.php
+  - name: Copy result of npm run build to be served out of public/
+    copy:
+      src: "{{ item.path }}"
+      dest: "{{appPath}}/public"
+      remote_src: yes
+    with_items: "{{ find_result.files }}"
 
   handlers:
-    - name: restart php7-fpm
-      service: name=php7.0-fpm state=restarted
+    - name: restart php7.2-fpm
+      service: name=php7.2-fpm state=restarted
     - name: restart nginx
       service: name=nginx state=restarted
