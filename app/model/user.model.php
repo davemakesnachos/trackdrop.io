@@ -33,12 +33,6 @@ class UserModel extends Model
             $error["field"] = "name";
         }
 
-        if ($user_data['code'] == "") {
-            $error['status'] = 'fail';
-            $error["error"] = "The 'code' field must be provided.";
-            $error["field"] = "code";
-        }
-
         if (isset($error))
             return $error;
 
