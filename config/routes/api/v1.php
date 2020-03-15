@@ -50,3 +50,16 @@ Router::addApi([
     'controller' => 'SessionController',
     'method' => 'logout',
 ]);
+
+# Invite Routes
+Router::addApi([
+    'url' => '/api/v1/invite/create',
+    'controller' => 'InviteController',
+    'method' => 'create',
+]);
+
+Router::addApi([
+    'url' => '/api/v1/invite/validate',
+    'controller' => 'InviteController',
+    'method' => 'validate',
+]);
