@@ -4,6 +4,7 @@ export const userService = {
     login,
     logout,
     register,
+    checkCode
 };
 
 function login(userAuthCredentials) {
@@ -19,4 +20,9 @@ function logout() {
 function register(user) {
     const axios = axiosAuthed();
     return axios.post(`/api/v1/user/register`, user);
+}
+
+function checkCode(code) {
+    const axios = axiosAuthed();
+    return axios.post(`/api/v1/invite/validate`, code);
 }
