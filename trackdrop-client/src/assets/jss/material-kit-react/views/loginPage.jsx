@@ -1,12 +1,19 @@
 import { container } from "../../material-kit-react.jsx";
 
 const signupPageStyle = {
+  body: {
+    display: "flex",
+    minHeight: "100vh",
+    flexDirection: "column"
+  },
   container: {
     ...container,
     zIndex: "2",
     position: "relative",
-    paddingTop: "20vh",
-    color: "#FFFFFF"
+    paddingTop: "10vh",
+    display: "flex",
+    minHeight: "80vh",
+    flexDirection: "column"
   },
   cardHidden: {
     opacity: "0",
@@ -42,6 +49,10 @@ const signupPageStyle = {
       bottom: "0",
       width: "100%"
     }
+  },
+  footer: {
+    marginTop: 100,
+    bottom: 0
   },
   form: {
     margin: "0"
@@ -84,6 +95,13 @@ const signupPageStyle = {
   },
   inputIconsColor: {
     color: "#495057"
+  },
+  marginAuto: {
+    marginLeft: "auto !important",
+    marginRight: "auto !important"
+  },
+  codeForm: {
+    textAlign: "center"
   }
 };
 
