@@ -63,3 +63,16 @@ Router::addApi([
     'controller' => 'InviteController',
     'method' => 'validate',
 ]);
+
+# Password reset routes
+Router::addApi([
+    'url' => '/api/v1/forgot_password',
+    'controller' => 'PasswordResetRequestController',
+    'method' => 'create',
+]);
+
+Router::addApi([
+    'url' => '/api/v1/reset_password',
+    'controller' => 'PasswordResetRequestController',
+    'method' => 'validate',
+]);
