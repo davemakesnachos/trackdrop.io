@@ -1,5 +1,8 @@
 {
     "require": {
-        "robmorgan/phinx": "^0.5.3"
+        "robmorgan/phinx": "^0.5.3",
+        "mailgun/mailgun-php": "^2.8",
+        "php-http/guzzle6-adapter": "^1.1",
+        "php-http/message": "^1.7"
     }
 }
