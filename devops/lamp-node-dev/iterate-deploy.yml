@@ -1,0 +1,57 @@
+---
+- hosts: all
+  vars:
+    privateKey: "/home/dave/Projects/trackdrop/devops/keys/deploy_key"
+    appPath: "/var/www/trackdrop-dev"
+
+  tasks:
+
+  - name: Git Clone Repo
+    git:
+        repo: git@gitlab.com:davemakesnachos/trackdrop.git
+        dest: "{{appPath}}"
+        update: yes
+        force: yes
+        accept_hostkey: yes
+        key_file: "/root/.ssh/deploy-key"
+        version: "invite-codes-for-beta"
+    register: git_finished
+    become_user: "www-data"
+
+  - name: Running NPM install
+    npm: path="{{appPath}}/trackdrop-client"
+    register: npm_finished
+    when: git_finished.changed
+
+  - composer:
+      command: install
+      working_dir: "{{ appPath }}"
+
+  - name: Building ReactJS App with npm run build
+    command: npm run build
+    args:
+      chdir: "{{appPath}}/trackdrop-client"
+
+  - name: Migrate database
+    shell: "{{appPath}}/vendor/bin/phinx migrate"
+    args:
+      chdir: "{{ appPath }}"
+
+  - name: Collect list of all files generated in build/ after npm run build
+    find:
+      paths: "{{ appPath }}/trackdrop-client/build"
+      file_type: "any"
+    register: find_result
+
+  - name: Copy result of npm run build to be served out of public/
+    copy:
+      src: "{{ item.path }}"
+      dest: "{{appPath}}/public"
+      remote_src: yes
+    with_items: "{{ find_result.files }}"
+
+  handlers:
+    - name: restart php7.2-fpm
+      service: name=php7.2-fpm state=restarted
+    - name: restart nginx
+      service: name=nginx state=restarted
