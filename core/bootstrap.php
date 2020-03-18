@@ -16,3 +16,4 @@ foreach($api_route_files as $file){
 }
 
 require_once(APP_ROOT . '/lib/json_helpers.php');
+require_once(APP_ROOT . '/lib/mail_helpers.php');
