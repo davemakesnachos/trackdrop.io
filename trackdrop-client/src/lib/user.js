@@ -4,7 +4,8 @@ export const userService = {
     login,
     logout,
     register,
-    checkCode
+    checkCode,
+    forgotPassword
 };
 
 function login(userAuthCredentials) {
@@ -25,4 +26,9 @@ function register(user) {
 function checkCode(code) {
     const axios = axiosAuthed();
     return axios.post(`/api/v1/invite/validate`, code);
+}
+
+function forgotPassword(email) {
+    const axios = axiosAuthed();
+    return axios.post(`/api/v1/forgot_password`, email);
 }
