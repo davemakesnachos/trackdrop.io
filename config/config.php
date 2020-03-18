@@ -19,7 +19,7 @@ $config['db_password'] = '';
 $config['session_token_name'] = 'HTTP_ATDTK';
 
 require_once('local_config.php');
-//require_once('private_config.php');
+require_once('private_config.php');
 
 $config['redirect_mode'] = false;
 
