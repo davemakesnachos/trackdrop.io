@@ -22,6 +22,14 @@ sufficent for this.
 
   $ sudo fallocate -l 1G /swapfile && sudo chmod 600 /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile
 
+Local File Setup
+================
+
 Ensure the required deploy key is under ``devops/keys/deploy-key``. If no
 key is present or it is not up to date, handle generating a new one using
 Gitlab.
+
+Additionally, a ``private_config.php`` file must exist containing all private config that
+is kept out of source control. Required API keys are:
+
+MAILGUN_API_KEY                 API Key for Mailgun API
