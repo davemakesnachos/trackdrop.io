@@ -84,9 +84,11 @@ const signupPageStyle = {
   },
   cardFooter: {
     paddingTop: "0rem",
+    paddingBottom: "10px",
     border: "0",
     borderRadius: "6px",
-    justifyContent: "center !important"
+    justifyContent: "center !important",
+    display: "block"
   },
   socialLine: {
     marginTop: "1rem",
@@ -102,7 +104,10 @@ const signupPageStyle = {
   },
   codeForm: {
     textAlign: "center"
-  }
+  },
+  afterFormLink: {
+    display: "block",
+  },
 };
 
 export default signupPageStyle;

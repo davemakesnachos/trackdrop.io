@@ -21,7 +21,7 @@ import CustomInput from "./CustomInput/CustomInput.jsx";
 import { userService } from '../lib/user.js'
 import { connect } from 'react-redux';
 import { userActions } from '../actions';
-
+import { withRouter, Link } from 'react-router-dom';
 
 import loginPageStyle from "../assets/jss/material-kit-react/views/loginPage.jsx";
 
@@ -132,12 +132,16 @@ function Login(props) {
                         </div>)
                       : "" }
                     <CardFooter className={classes.cardFooter}>
-                    { isLoading
-                              ? <Button simple color="primary" size="lg"><CircularProgress size={14} /></Button>
-                              : <Button simple color="primary" size="lg" onClick={doLogin}>Login</Button> }
+                        { isLoading
+                                    ? <Button color="primary" size="lg"><CircularProgress size={14} /></Button>
+                                    : <Button color="primary" size="lg" onClick={doLogin}>Login</Button> }
+                        <br /><br />
+                        <span className={classes.afterFormLink} >Need an account? <Link to='/register' >Create it here</Link></span>
+                        <span className={classes.afterFormLink} ><Link to='/forgot_password' >Forgot password</Link>?</span>
                     </CardFooter>
                   </form>
                 </Card>
+
               </GridItem>
             </GridContainer>
           </div>
