@@ -4,6 +4,7 @@ import 'dropzone/dist/min/dropzone.min.css';
 import 'react-dropzone-component/styles/filepicker.css';
 import { Landing } from './components/landing.js';
 import { ForgotPasswordPage } from './components/forgot_password_page.js';
+import { ResetPasswordPage } from './components/reset_password_page.js';
 import { UserTracks } from './components/user_tracks.js'
 import { Profile } from './components/profile.js'
 import { UserTrack } from './components/user_track.js'
@@ -62,7 +63,8 @@ function App(props) {
                 }
                 <Switch>
                     <Route path='/login' component={Login} />
-                    <Route path='/forgot_password' component={ForgotPasswordPage} />>
+                    <Route path='/reset_password' component={ResetPasswordPage} />
+                    <Route path='/forgot_password' component={ForgotPasswordPage} />
                     <Route path='/register' component={Register} />
                     <Route path='/track/:profile/:track' component={UserTrack} />
                     <Route path='/tracks/:profile' component={Profile} />
