@@ -85,8 +85,10 @@ class Model
         return $this;
     }
 
-    public function delete($where_clause)
+    public function delete($where_clause = "")
     {
+        if ($where_clause == "" && property_exists($this, id))
+            $where_clause = "id = \"$this->id\"";
         $sql = 'DELETE FROM ' . $this->table . ' WHERE ' . $where_clause;
         return $this->db->exec($sql);
     }
