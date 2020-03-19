@@ -82,5 +82,23 @@ class UserModel extends Model
         return password_verify($password, $this->password_hash);
     }
 
+    public function update_password($password_data)
+    {
+        if (isset($password_data['password']))
+            $password_data['password_hash'] = password_hash($password_data['password'], PASSWORD_DEFAULT);
+        else
+            $password_data['password_hash'] = null;
+
+        $password_data_cleaned = $this->permit($password_data, array('password_hash'));
+
+        try {
+            $ret = $this->update($password_data_cleaned, "id = \"$this->id\"");
+        } catch (\PDOException $e) {
+            $error['status'] = 'fail';
+            return $error;
+        }
+        $result['status'] = 'OK';
+        return $result;
+    }
 }
 
