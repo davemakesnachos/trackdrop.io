@@ -8,6 +8,7 @@ namespace App\Controller\Api\v1;
 
 use Core\Controller;
 use App\Model\UserModel;
+use App\Model\PasswordResetRequestModel;
 use App\Model\InviteCodeModel;
 
 class UserController extends Controller
@@ -51,6 +52,42 @@ class UserController extends Controller
             $inviteCode->markUsed($code);
             $response = json_response_success(["id" => $result['user_id'] ]);
         }
+        $this->data('response', $response);
+    }
+
+    public function reset_password()
+    {
+        $json_data_input = $this->params['json'];
+        $token = $json_data_input['token'];
+        $passwordResetRequest = PasswordResetRequestModel::findBy(array('token' => $token));
+
+        if (!$passwordResetRequest) {
+            $response = json_response_fail(400, [], "Invalid Token.");
+            $this->data('response', $response);
+            return;
+        }
+
+        $user_id = $passwordResetRequest->user_id;
+        $user_data = array("password" => $json_data_input['password']);
+        $user = UserModel::find($user_id);
+
+        if (!$user) {
+            $response = json_response_fail(400, [], "Invalid.");
+            $this->data('response', $response);
+            return;
+        }
+
+        $ret = $user->update_password($user_data);
+        if ($ret['status'] == 'fail') {
+            $response = json_response_fail(400, [], "Operation Failed.");
+            $this->data('response', $response);
+            return;
+        } else {
+            // XXX: Must add error check
+            $passwordResetRequest->delete();
+            $response = json_response_success([]);
+        }
+
         $this->data('response', $response);
     }
 

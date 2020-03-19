@@ -40,6 +40,12 @@ Router::addApi([
 ]);
 
 Router::addApi([
+    'url' => '/api/v1/user/reset_password',
+    'controller' => 'UserController',
+    'method' => 'reset_password',
+]);
+
+Router::addApi([
     'url' => '/api/v1/login',
     'controller' => 'SessionController',
     'method' => 'login',
