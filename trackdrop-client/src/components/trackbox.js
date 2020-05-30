@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { DeleteButton } from './trackbox_delete_modal.js';
 import Waveform from './waveform.js';
 
@@ -65,56 +65,46 @@ const styles = theme => ({
   }
 });
 
-class TrackBox extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
+function TrackBox(props) {
+    const initialTrackState = {
         playing: false,
         pos: 0,
         loaded: false,
         audioFile: ''
-        };
-        this.handleTogglePlay = this.handleTogglePlay.bind(this);
-        this.handlePosChange = this.handlePosChange.bind(this);
-        this.confirmDelete = this.confirmDelete.bind(this);
-    }
+    };
 
-    handleTogglePlay() {
-        if (!this.state.loaded) {
-            this.setState({
-                audioFile: this.props.track.streamUrl,
+    const [trackState, setTrackState] = useState(initialTrackState)
+
+    const handleTogglePlay = () => {
+        if (!trackState.loaded) {
+            setTrackState({
+                audioFile: props.track.streamUrl,
                 loaded: true,
                 playing: true
             })
         } else {
-            this.setState({
-                playing: !this.state.playing,
+            setTrackState({
+                ...trackState,
+                playing: !trackState.playing,
             });
         }
     }
 
-    handlePosChange(e) {
-        this.setState({
-        pos: e.originalArgs[0]
-        });
-    }
-
-    confirmDelete() {
-        let removeTrack = this.props.removetrack;
-        fetch('/api/v1/track/delete/' + this.props.track.id, {
+    const confirmDelete = () => {
+        let removeTrack = props.removetrack;
+        fetch('/api/v1/track/delete/' + props.track.id, {
             accept: 'application/json',
         }).then(() => {
-            removeTrack(this.props.track.id);
+            removeTrack(props.track.id);
         })
     }
 
-    render() {
-        const { classes } = this.props;
+    const { classes } = props;
 
-        const trackUrl = '/track/' + this.props.track.user + '/' + this.props.track.name;
-        const profileUrl = '/tracks/' + this.props.track.user;
-        return (
+    const trackUrl = '/track/' + props.track.user + '/' + props.track.name;
+    const profileUrl = '/tracks/' + props.track.user;
+
+    return (
         <Card className={classes.card}>
             <CardHeader
             avatar={
@@ -122,19 +112,19 @@ class TrackBox extends React.Component {
                 R
                 </Avatar>
             }
-            title={ <Link to={trackUrl}>{this.props.track.name}</Link> }
-            subheader={<Link to={profileUrl}>{this.props.track.user}</Link> }
+            title={ <Link to={trackUrl}>{props.track.name}</Link> }
+            subheader={<Link to={profileUrl}>{props.track.user}</Link> }
             className={classes.cardHeader}
             />
             <CardContent className={classes.trackPlayerContent}>
-                <Button large justIcon round onClick={this.handleTogglePlay} className={classes.controlButton}>
-                    {(this.state.playing)
+                <Button large justIcon round onClick={handleTogglePlay} className={classes.controlButton}>
+                    {(trackState.playing)
                         ? <PauseIcon />
                         : <PlayIcon />
                     }
                 </Button>
                 <div className={classes.waveformBox}>
-                    <Waveform src={this.state.audioFile} audioPeaks={this.props.track.wave_data.data} playing={this.state.playing}></Waveform>
+                    <Waveform src={trackState.audioFile} audioPeaks={props.track.wave_data.data} playing={trackState.playing}></Waveform>
                 </div>
             </CardContent>
             <CardActions className={classes.actions} disableActionSpacing>
@@ -146,8 +136,7 @@ class TrackBox extends React.Component {
             </IconButton>
             </CardActions>
         </Card>
-        );
-    }
+    );
 }
 
 TrackBox.propTypes = {
