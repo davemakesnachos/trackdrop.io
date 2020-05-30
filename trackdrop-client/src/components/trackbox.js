@@ -10,13 +10,19 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import red from '@material-ui/core/colors/red';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Button from './CustomButtons/Button.jsx';
 import PlayIcon from '@material-ui/icons/PlayArrow';
@@ -104,38 +110,101 @@ function TrackBox(props) {
     const trackUrl = '/track/' + props.track.user + '/' + props.track.name;
     const profileUrl = '/tracks/' + props.track.user;
 
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+    const handleMenuClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleMenuCloseAndDeleteDialogOpen = () => {
+        handleMenuClose();
+        setDeleteDialogOpen(true);
+    }
+
+    const handleDeleteDialogClose = () => {
+        setDeleteDialogOpen(false);
+    };
+
+    const processDelete = () => {
+        confirmDelete();
+        handleDeleteDialogClose();
+    };
+
     return (
-        <Card className={classes.card}>
-            <CardHeader
-            avatar={
-                <Avatar aria-label="Recipe" className={classes.avatar}>
-                R
-                </Avatar>
-            }
-            title={ <Link to={trackUrl}>{props.track.name}</Link> }
-            subheader={<Link to={profileUrl}>{props.track.user}</Link> }
-            className={classes.cardHeader}
-            />
-            <CardContent className={classes.trackPlayerContent}>
-                <Button large justIcon round onClick={handleTogglePlay} className={classes.controlButton}>
-                    {(trackState.playing)
-                        ? <PauseIcon />
-                        : <PlayIcon />
-                    }
+        <div>
+            <Dialog
+                open={deleteDialogOpen}
+                onClose={handleDeleteDialogClose}
+                aria-describedby="alert-delete-track-dialog-description"
+            >
+                <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    Are you sure you want to permanently delete {props.track.name}?
+                </DialogContentText>
+                <DialogContentText id="alert-dialog-description">
+                    This action cannot be undone!
+                </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                <Button onClick={handleDeleteDialogClose} color="primary" simple size="medium">
+                    Cancel
                 </Button>
-                <div className={classes.waveformBox}>
-                    <Waveform src={trackState.audioFile} audioPeaks={props.track.wave_data.data} playing={trackState.playing}></Waveform>
-                </div>
-            </CardContent>
-            <CardActions className={classes.actions} disableActionSpacing>
-            <IconButton aria-label="Add to favorites">
-                <FavoriteIcon />
-            </IconButton>
-            <IconButton aria-label="Share">
-                <ShareIcon />
-            </IconButton>
-            </CardActions>
-        </Card>
+                <Button onClick={processDelete} color="danger" size="medium" simple>
+                    Delete Forever
+                </Button>
+                </DialogActions>
+            </Dialog>
+            <Card className={classes.card}>
+                <Menu
+                    id="more-actions-menu"
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={handleMenuClose}
+                    >
+                    <MenuItem onClick={handleMenuCloseAndDeleteDialogOpen}>Delete Track</MenuItem>
+                </Menu>
+                <CardHeader
+                avatar={
+                    <Avatar aria-label="Recipe" className={classes.avatar}>
+                    R
+                    </Avatar>
+                }
+                title={ <Link to={trackUrl}>{props.track.name}</Link> }
+                subheader={<Link to={profileUrl}>{props.track.user}</Link> }
+                className={classes.cardHeader}
+                />
+                <CardContent className={classes.trackPlayerContent}>
+                    <Button large justIcon round onClick={handleTogglePlay} className={classes.controlButton}>
+                        {(trackState.playing)
+                            ? <PauseIcon />
+                            : <PlayIcon />
+                        }
+                    </Button>
+                    <div className={classes.waveformBox}>
+                        <Waveform src={trackState.audioFile} audioPeaks={props.track.wave_data.data} playing={trackState.playing}></Waveform>
+                    </div>
+                </CardContent>
+                <CardActions className={classes.actions} disableActionSpacing>
+                    <div style={{ flex: 1 }}>
+                        <IconButton aria-label="Add to favorites">
+                            <FavoriteIcon />
+                        </IconButton>
+                        <IconButton aria-label="Share">
+                            <ShareIcon />
+                        </IconButton>
+                    </div>
+                <IconButton aria-label="More" onClick={ handleMenuClick }>
+                    <MoreVertIcon />
+                </IconButton>
+                </CardActions>
+            </Card>
+        </div>
     );
 }
 
