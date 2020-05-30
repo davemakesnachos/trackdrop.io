@@ -1,12 +1,12 @@
 import axios from 'axios';
 
-export default function axiosAuthed() {
+export default function axiosAuthed(extraOptions = {}) {
     const config = {
-        timeout: 30000,
         headers: {
             ...authHeader(),
             accept: 'application/json'
-        }
+        },
+        ...extraOptions
     }
 
     return axios.create(config);
@@ -22,3 +22,4 @@ export const authHeader = () => {
 
     return authHeader;
 }
+
