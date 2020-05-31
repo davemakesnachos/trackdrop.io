@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import TrackBox from './trackbox.js';
+import { TrackBox } from './trackbox.js';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 export class TrackList extends Component {

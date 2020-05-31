@@ -80,9 +80,21 @@ class TrackController extends Controller
 
     public function delete()
     {
-        $track = new TrackModel();
+        if (!$this->logged_in) {
+            $response = json_response_fail(401, [], "User Not Authorized");
+            $this->data('response', $response);
+            return;
+        }
 
-        $id = $this->params['id'];
+        $id = $this->params['json']['id'];
+        $user_id = $this->user_data->id;
+
+        $track = TrackModel::find($id);
+        if ($track->user_id != $user_id) {
+            $response = json_response_fail(401, [], "User Not Authorized");
+            $this->data('response', $response);
+            return;
+        }
 
         $track->delete("id = \"" . $id. "\"");
 

@@ -21,7 +21,7 @@ Router::addApi([
 ]);
 
 Router::addApi([
-    'url' => '/api/v1/track/delete/{id}',
+    'url' => '/api/v1/track/delete',
     'controller' => 'TrackController',
     'method' => 'delete',
 ]);

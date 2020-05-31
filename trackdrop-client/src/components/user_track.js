@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect } from 'react';
-import TrackBox from './trackbox.js'
+import {TrackBox} from './trackbox.js'
 import {  } from './tracklist.js';
 import axiosAuthed from '../lib/auth.js';
 import Grid from '@material-ui/core/Grid';
