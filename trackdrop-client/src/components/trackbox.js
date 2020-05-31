@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { DeleteButton } from './trackbox_delete_modal.js';
 import Waveform from './waveform.js';
+import { trackService } from '../lib/track.js';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -28,6 +29,7 @@ import Button from './CustomButtons/Button.jsx';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
 import { withRouter, Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 const styles = theme => ({
   card: {
@@ -98,11 +100,18 @@ function TrackBox(props) {
 
     const confirmDelete = () => {
         let removeTrack = props.removetrack;
-        fetch('/api/v1/track/delete/' + props.track.id, {
-            accept: 'application/json',
-        }).then(() => {
-            removeTrack(props.track.id);
+
+        trackService.deleteTrack({id: props.track.id})
+        .then(function (response) {
+            if (response.data.status == 200) {
+                removeTrack(props.track.id);
+            }
         })
+        .catch(function (error) {
+            //TODO: Error on deleting track.
+        })
+        .then(function () {
+        });
     }
 
     const { classes } = props;
@@ -199,9 +208,14 @@ function TrackBox(props) {
                             <ShareIcon />
                         </IconButton>
                     </div>
-                <IconButton aria-label="More" onClick={ handleMenuClick }>
-                    <MoreVertIcon />
-                </IconButton>
+                { (props.userData.name == props.track.user)
+                    ? (
+                        <IconButton aria-label="More" onClick={ handleMenuClick }>
+                            <MoreVertIcon />
+                        </IconButton>
+                      )
+                    : <div /> }
+
                 </CardActions>
             </Card>
         </div>
@@ -212,4 +226,13 @@ TrackBox.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(TrackBox);
+function mapStateToProps(state) {
+    const userData = state.user;
+    return {
+        userData
+    };
+}
+
+const styledTrackBox = withStyles(styles)(TrackBox)
+const styledConnectedTrackBox = connect(mapStateToProps)(styledTrackBox);
+export { styledConnectedTrackBox as TrackBox };
