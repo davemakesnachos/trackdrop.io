@@ -20,6 +20,14 @@ import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import red from '@material-ui/core/colors/red';
+import green from '@material-ui/core/colors/green';
+import blue from '@material-ui/core/colors/blue';
+import yellow from '@material-ui/core/colors/yellow';
+import orange from '@material-ui/core/colors/orange';
+import purple from '@material-ui/core/colors/purple';
+import lightGreen from '@material-ui/core/colors/lightGreen';
+import lightBlue from '@material-ui/core/colors/lightBlue';
+import pink from '@material-ui/core/colors/pink';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import Menu from '@material-ui/core/Menu';
@@ -118,6 +126,7 @@ function TrackBox(props) {
 
     const trackUrl = '/track/' + props.track.user + '/' + props.track.name;
     const profileUrl = '/tracks/' + props.track.user;
+    const userNameLetter = props.track.user.charAt(0);
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -142,6 +151,35 @@ function TrackBox(props) {
     const processDelete = () => {
         confirmDelete();
         handleDeleteDialogClose();
+    };
+
+    const returnAvatarColor = (name) => {
+        const colors = [
+            {backgroundColor: green[500]},
+            {backgroundColor: red[500]},
+            {backgroundColor: blue[500]},
+            {backgroundColor: yellow[500]},
+            {backgroundColor: lightBlue[500]},
+            {backgroundColor: lightGreen[500]},
+            {backgroundColor: purple[500]},
+            {backgroundColor: orange[500]},
+            {backgroundColor: pink[500]}
+        ];
+
+        var hash = 0;
+        for (var i = 0; i < name.length; i++) {
+            var char = name.charCodeAt(i);
+            hash = ((hash<<5)-hash)+char;
+            hash = hash & hash; // Convert to 32bit integer
+        }
+
+        console.log(hash);
+
+        hash = hash % colors.length
+
+        console.log(colors.length);
+
+        return colors[hash];
     };
 
     return (
@@ -180,8 +218,8 @@ function TrackBox(props) {
                 </Menu>
                 <CardHeader
                 avatar={
-                    <Avatar aria-label="Recipe" className={classes.avatar}>
-                    R
+                    <Avatar aria-label="Profile" className={classes.avatar} style={returnAvatarColor(props.track.user)}>
+                    {userNameLetter}
                     </Avatar>
                 }
                 title={ <Link to={trackUrl}>{props.track.name}</Link> }
