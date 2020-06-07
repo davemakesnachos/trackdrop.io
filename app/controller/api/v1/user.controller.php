@@ -62,7 +62,7 @@ class UserController extends Controller
         $passwordResetRequest = PasswordResetRequestModel::findBy(array('token' => $token));
 
         if (!$passwordResetRequest) {
-            $response = json_response_fail(400, [], "Invalid Token.");
+            $response = json_response_fail(404, [], "Invalid Token.");
             $this->data('response', $response);
             return;
         }
