@@ -9,3 +9,4 @@ uploads/
 .vagrant
 .vscode
 devops/keys
+docs/apidoc
