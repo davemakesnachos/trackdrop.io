@@ -82,4 +82,9 @@ class TrackModel extends Model
 
 		return	$file_sha_hash;
 	}
+
+	static public function find_by_slug_and_user($slug, $user_id)
+	{
+		return $this::findBy(['slug' => $slug, 'user_id' => $user_id]);
+	}
 }
