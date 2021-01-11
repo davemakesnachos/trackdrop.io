@@ -73,6 +73,20 @@ Router::addApi([
 ]);
 
 /**
+ * @api {get} api/v1/track/validate_slug Get a single track associated with profile
+ * @apiName TracksProfileTrack
+ * @apiGroup Tracks
+ *
+ * @apiSuccess (200) {String} result 'OK'.
+ */
+
+Router::addApi([
+    'url' => '/api/v1/track/validate_slug',
+    'controller' => 'TrackController',
+    'method' => 'validateTrackSlugForUser',
+]);
+
+/**
  * @api {get} api/v1/user/register Register a new user
  * @apiName UserRegister
  * @apiGroup User
