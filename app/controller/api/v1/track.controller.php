@@ -159,4 +159,25 @@ class TrackController extends Controller
         $response = json_response_success($response);
         $this->data('response', $response);
     }
+
+	public function validateTrackSlugForUser()
+	{
+		if (!$this->logged_in) {
+			$response = json_response_fail(401, [], "User Not Authorized");
+			$this->data('response', $response);
+			return;
+		}
+
+		$slug = $this->params['json']['track']['slug'];
+		$user_id = $this->user_data->id;
+
+		echo($slug);
+		echo($user_id);
+
+		$result = TrackModel::validateSlug($slug, $user_id);
+
+		$response['slug_valid'] = $result;
+		$response = json_response_success($response);
+		$this->data('response', $response);
+	}
 }
