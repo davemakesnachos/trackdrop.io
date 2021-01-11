@@ -35,3 +35,11 @@ function is_json($string)
     $data = json_decode($string);
     return (json_last_error() == JSON_ERROR_NONE) ? TRUE : FALSE;
 }
+
+function is_valid_slug($slug)
+{
+    if (preg_match('/^[a-z][-a-z0-9]*$/', $slug))
+        return true;
+
+    return false;
+}
