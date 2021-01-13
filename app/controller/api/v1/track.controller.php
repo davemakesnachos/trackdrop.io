@@ -107,11 +107,11 @@ class TrackController extends Controller
         $track = new TrackModel();
 
         $profile = $this->params['profile'];
-        $trackname = addslashes($this->params['track']);
+        $slug = addslashes($this->params['slug']);
 
         $u = UserModel::findBy(array("name" => $profile));
 
-        $t = $track->findBy(array("name" => $trackname, "user_id" => $u->id));
+        $t = $track->findBy(array("slug" => $slug, "user_id" => $u->id));
 
         if (empty($t)) {
             $response = json_response_fail(404, [], "Not Found");

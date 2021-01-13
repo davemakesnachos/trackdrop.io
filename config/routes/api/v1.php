@@ -59,7 +59,7 @@ Router::addApi([
 ]);
 
 /**
- * @api {get} api/v1/track/{profile}/{track} Get a single track associated with profile
+ * @api {get} api/v1/track/{profile}/{slug} Get a single track associated with profile
  * @apiName TracksProfileTrack
  * @apiGroup Tracks
  *
@@ -67,7 +67,7 @@ Router::addApi([
  */
 
 Router::addApi([
-    'url' => '/api/v1/track/{profile}/{track}',
+    'url' => '/api/v1/track/{profile}/{slug}',
     'controller' => 'TrackController',
     'method' => 'trackFromProfileAndName',
 ]);
