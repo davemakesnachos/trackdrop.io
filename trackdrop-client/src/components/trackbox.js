@@ -124,7 +124,7 @@ function TrackBox(props) {
 
     const { classes } = props;
 
-    const trackUrl = '/track/' + props.track.user + '/' + props.track.name;
+    const trackUrl = '/track/' + props.track.user + '/' + props.track.slug;
     const profileUrl = '/tracks/' + props.track.user;
     const userNameLetter = props.track.user.charAt(0);
 
