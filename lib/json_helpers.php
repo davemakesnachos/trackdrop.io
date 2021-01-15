@@ -43,3 +43,12 @@ function is_valid_slug($slug)
 
     return false;
 }
+
+function create_slug($name)
+{
+    $withoutExt = preg_replace('/\\.[^.\\s]{3,4}$/', '', $name);
+	$slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $withoutExt)));
+    $slug = rtrim($slug, "-");
+
+    return $slug;
+}
