@@ -87,4 +87,17 @@ class TrackModel extends Model
 	{
 		return $this::findBy(['slug' => $slug, 'user_id' => $user_id]);
 	}
+
+	public function validate_slug($slug, $user_id)
+	{
+		if (!is_valid_slug($slug))
+			return false;
+
+		$check_slug = TrackModel::findBy(['slug' => $slug, 'user_id' => $user_id]);
+
+		if ($check_slug != null)
+			return false;
+
+		return true;
+	}
 }
