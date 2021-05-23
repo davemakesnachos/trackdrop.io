@@ -62,12 +62,15 @@ class Model
         return $this->db->lastInsertId();
     }
 
-    public function update($fields, $where_clause)
+    public function update($fields, $where_clause = "")
     {
         $sql = 'UPDATE ' . $this->table . ' SET ';
         foreach($fields as $key => $value) {
             $sql .= $key . '= "' . $value . '", ';
         }
+        if ($where_clause == "" && property_exists($this, 'id'))
+            $where_clause = '`id` = "' . $this->id . '"';
+
         $sql = substr($sql, 0, -2);
         $sql .= ' WHERE ' . $where_clause;
 
