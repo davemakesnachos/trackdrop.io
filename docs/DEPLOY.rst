@@ -33,3 +33,15 @@ Additionally, a ``private_config.php`` file must exist containing all private co
 is kept out of source control. Required API keys are:
 
 MAILGUN_API_KEY                 API Key for Mailgun API
+
+Ansible Provisioning
+====================
+
+Use
+
+.. code::
+
+   $ ansible-playbook  -i hosts iterate-deploy.yml
+
+Ensure that the branch name within the script matches the branch that should
+be checked out.
