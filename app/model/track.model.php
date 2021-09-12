@@ -43,10 +43,12 @@ class TrackModel extends Model
 
 	    $twd = $trackWaveData->build_waveform($tempFile);
 
-	    $ret = move_uploaded_file($tempFile, $targetFile);
+        $ret = file_exists($targetFile);
+
+        if ($ret == false)
+            $ret = move_uploaded_file($tempFile, $targetFile);
 
 	    if (!$ret) {
-			if (!file_exists($targetFile))
 				return $ret;
 	    }
 
