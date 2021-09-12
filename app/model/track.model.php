@@ -13,21 +13,25 @@ class TrackModel extends Model
 {
 	protected $table = "tracks";
 
-	public function create($file, $hash, $user_id)
+	public function create($file, $hash, $user_id, $slug)
 	{
         $file['hash'] = $hash;
         $file['user_id'] = $user_id;
+        $file['slug'] = $slug;
 
         $track_data_cleaned = $this->permit($file, array('name',
                                                          'size',
                                                          'hash',
-                                                         'user_id'));
+                                                         'user_id',
+                                                         'slug'));
         return $this->insert($track_data_cleaned);
 	}
 
 	public function upload($file, $user_id = 0)
 	{
 		$trackWaveData = new TrackWaveDataModel;
+
+        $name = $file['name'];
 
 		$tempFile = $file['tmp_name'];
 
@@ -46,7 +50,17 @@ class TrackModel extends Model
 				return $ret;
 	    }
 
-	    $track_id = $this->create($file, $file_hash, $user_id);
+        $slug = create_slug($name);
+
+        /* Make sure we have unique slug, if not, number it */
+        $original_slug = $slug;
+        $idx = 1;
+        while (!$this->validate_slug($slug, $user_id)) {
+                $slug = $original_slug . '-' . $idx;
+                $idx++;
+        }
+
+	    $track_id = $this->create($file, $file_hash, $user_id, $slug);
 
 	    $trackWaveData->create($track_id, $twd);
 
